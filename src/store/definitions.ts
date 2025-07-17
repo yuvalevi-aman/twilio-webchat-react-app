@@ -10,6 +10,30 @@ export enum EngagementPhase {
     Loading = "Loading"
 }
 
+type Button = {
+    label: string;
+    value: string;
+};
+
+type MessageAttributes = {
+    widgetName: string;
+    customAttribute: string;
+    anotherFlag: boolean;
+    buttons: Button[];
+};
+
+export type StudioFlowData = {
+    currentWidget: string;  
+    messageBody: string;
+    messageAttributes: MessageAttributes;
+};
+
+export type PreEngagementData = {
+    name: string;
+    email: string;
+    query: string;
+};
+
 export type ChatState = {
     conversationsClient?: Client;
     conversation?: Conversation;
@@ -19,8 +43,6 @@ export type ChatState = {
     attachedFiles?: File[];
     conversationState?: string;
 };
-
-export type PreEngagementData = { name: string; email: string; query: string };
 
 export type SessionState = {
     currentPhase: EngagementPhase;
@@ -33,7 +55,8 @@ export type SessionState = {
     participants?: Participant[];
     messages?: Message[];
     conversationState?: "active" | "inactive" | "closed";
-    preEngagementData?: PreEngagementData;
+    preEngagementData: PreEngagementData;
+    studioFlowData: StudioFlowData;
 };
 
 export type ConfigState = {

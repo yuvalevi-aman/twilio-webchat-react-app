@@ -1,7 +1,8 @@
 import { Dispatch } from "redux";
 import { Conversation } from "@twilio/conversations";
 
-import { EngagementPhase, Notification, PreEngagementData } from "../definitions";
+
+import { EngagementPhase, Notification, PreEngagementData, StudioFlowData } from "../definitions";
 import {
     ACTION_ADD_MULTIPLE_MESSAGES,
     ACTION_ADD_NOTIFICATION,
@@ -10,7 +11,8 @@ import {
     ACTION_CHANGE_EXPANDED_STATUS,
     ACTION_DETACH_FILES,
     ACTION_REMOVE_NOTIFICATION,
-    ACTION_UPDATE_PRE_ENGAGEMENT_DATA
+    ACTION_UPDATE_PRE_ENGAGEMENT_DATA,
+    ACTION_SET_STUDIO_FLOW_DATA
 } from "./actionTypes";
 import { MESSAGES_LOAD_COUNT } from "../../constants";
 
@@ -83,6 +85,15 @@ export function updatePreEngagementData(data: Partial<PreEngagementData>) {
         type: ACTION_UPDATE_PRE_ENGAGEMENT_DATA,
         payload: {
             preEngagementData: data
+        }
+    };
+}
+
+export function setStudioFlowData(data: StudioFlowData) {
+    return {
+        type: ACTION_SET_STUDIO_FLOW_DATA,
+        payload: {
+            studioFlowData: data
         }
     };
 }
