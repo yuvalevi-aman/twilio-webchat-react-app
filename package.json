@@ -9,7 +9,7 @@
     "@emotion/core": "^10.0.28",
     "@sendgrid/mail": "7.7.0",
     "@twilio-paste/core": "^10.20.0",
-    "@twilio-paste/icons": "^6.1.0",
+    "@twilio-paste/icons": "^5.9.0",
     "@twilio-paste/theme": "^5.3.3",
     "@twilio/conversations": "2.1.0-rc.0",
     "@types/file-saver": "2.0.5",
@@ -29,11 +29,13 @@
     "react-scripts": "^5.0.0",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.0",
+    "sass": "^1.89.2",
     "slugify": "1.6.5"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^12.1.2",
+    "@twilio-labs/svg-to-react": "^2.1.1",
     "@types/jest": "^27.0.3",
     "@types/lodash.merge": "^4.6.6",
     "@types/lodash.throttle": "^4.1.6",
@@ -64,8 +66,8 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "server": "nodemon server",
-    "server:ci": "node server",
+    "server": "nodemon server/index.js",
+    "server:ci": "node server/index.js",
     "build": "react-app-rewired build",
     "test": "LC_ALL=\"en_GB.UTF-8\" react-app-rewired test --env=jsdom --transformIgnorePatterns \"node_modules/(?!(@twilio-paste|@twilio/conversations))/\"",
     "test:nowatch": "yarn test --watchAll=false --verbose --runInBand",

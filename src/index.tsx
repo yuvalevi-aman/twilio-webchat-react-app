@@ -8,6 +8,7 @@ import { sessionDataHandler } from "./sessionDataHandler";
 import { initConfig } from "./store/actions/initActions";
 import { ConfigState } from "./store/definitions";
 import { initLogger } from "./logger";
+import './styles/main.scss';
 
 const defaultConfig: ConfigState = {
     serverUrl: "http://localhost:3001",

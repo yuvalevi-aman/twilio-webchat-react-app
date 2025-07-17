@@ -1,0 +1,78 @@
+@import "../../styles/main.scss";
+
+.outerContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: $space-40;
+
+}
+
+.bubbleAndAvatarContainer {
+  display: flex;
+  align-items: flex-end;
+}
+
+.avatarContainer {
+  width: $size-icon-40;
+  height: $size-icon-40;
+  margin-right: $space-30;
+  border-radius: $border-radius-circle;
+  overflow: hidden;
+  flex: 0 0 auto;
+
+  &.with-placeholder {
+    background-color: transparent;
+  }
+
+  &.with-avatar {
+    background-color: $color-background;
+  }
+}
+
+.innerContainer {
+  padding: $space-30 $space-40;
+  border-radius: $border-radius-30;
+  max-width: 90%;
+
+  &.currentUser {
+    background-color: $ui-color-light-gray;
+    color: $color-text-weakest;
+    margin-left: auto;
+    margin-right: $space-0;
+  }
+
+  &.otherUser {
+    background-color: $color-background;
+    color: $font-color-primary;
+    margin-left: $space-0;
+    margin-right: auto;
+  }
+}
+
+.author {
+  color: inherit;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-20;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.timeStamp {
+  font-size: $font-size-20;
+  margin-left: $space-40;
+  color: inherit;
+}
+
+.body {
+  color: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.readStatus {
+  text-align: right;
+  font-size: $font-size-10;
+  margin-right: $space-20;
+  color: $font-color-primary;
+}

@@ -8,7 +8,7 @@ import { sessionDataHandler } from "../sessionDataHandler";
 import { initSession } from "../store/actions/initActions";
 import { changeEngagementPhase } from "../store/actions/genericActions";
 
-const AnyCustomizationProvider: FC<CustomizationProviderProps & { style: CSSProperties }> = CustomizationProvider;
+const AnyCustomizationProvider: FC<CustomizationProviderProps> = CustomizationProvider;
 
 export function WebchatWidget() {
     const theme = useSelector((state: AppState) => state.config.theme);
@@ -33,25 +33,6 @@ export function WebchatWidget() {
         <AnyCustomizationProvider
             baseTheme={theme?.isLight ? "default" : "dark"}
             theme={theme?.overrides}
-            elements={{
-                MESSAGE_INPUT: {
-                    boxShadow: "none!important" as "none"
-                },
-                MESSAGE_INPUT_BOX: {
-                    display: "inline-block",
-                    boxShadow: "none"
-                },
-                ALERT: {
-                    paddingTop: "space30",
-                    paddingBottom: "space30"
-                },
-                BUTTON: {
-                    "&[aria-disabled='true'][color='colorTextLink']": {
-                        color: "colorTextLinkWeak"
-                    }
-                }
-            }}
-            style={{ minHeight: "100%", minWidth: "100%" }}
         >
             <RootContainer />
         </AnyCustomizationProvider>

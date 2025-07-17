@@ -8,7 +8,7 @@ export const messageListStyles: BoxStyleProps = {
     justifyContent: "flex-end",
     overflow: "auto",
     display: "flex",
-    flexDirection: "column-reverse"
+    flexDirection: "column-reverse",
 };
 
 export const outerContainerStyles: BoxStyleProps = {

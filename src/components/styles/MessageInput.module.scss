@@ -1,0 +1,40 @@
+@import '../../styles/main.scss';
+
+.formStyles {
+  padding: $space-20;
+}
+
+.innerInputStyles {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.textAreaContainerStyles {
+  margin-top: auto;
+  margin-bottom: auto;
+  flex: 1;
+}
+
+.messageOptionContainerStyles {
+  margin: $space-30;
+  margin-left: $space-20;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+
+  &:not(:last-child) {
+    margin-right: $space-0;
+  }
+}
+
+.filePreviewContainerStyles {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  max-height: 300px;
+  position: relative;
+  padding-left: $space-30;
+  padding-right: $space-30;
+}

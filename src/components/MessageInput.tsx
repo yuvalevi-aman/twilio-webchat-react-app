@@ -6,20 +6,13 @@ import { Box } from "@twilio-paste/core/box";
 import { InputBox } from "@twilio-paste/core/input-box";
 import { TextArea } from "@twilio-paste/core/textarea";
 import { Button } from "@twilio-paste/core/button";
-import { SendIcon } from "@twilio-paste/icons/esm/SendIcon";
 
 import { AppState } from "../store/definitions";
 import { AttachFileButton } from "./AttachFileButton";
 import { FilePreview } from "./FilePreview";
 import { detachFiles } from "../store/actions/genericActions";
 import { CHAR_LIMIT } from "../constants";
-import {
-    formStyles,
-    innerInputStyles,
-    messageOptionContainerStyles,
-    filePreviewContainerStyles,
-    textAreaContainerStyles
-} from "./styles/MessageInput.styles";
+import classes from "./styles/MessageInput.module.scss";
 
 export const MessageInput = () => {
     const dispatch = useDispatch();
@@ -30,7 +23,8 @@ export const MessageInput = () => {
         attachedFiles: state.chat.attachedFiles || [],
         fileAttachmentConfig: state.config.fileAttachment
     }));
-    const oldAttachmentsLength = useRef((attachedFiles || []).length);
+
+    const oldAttachmentsLength = useRef(attachedFiles.length);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const attachmentsBoxRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +32,6 @@ export const MessageInput = () => {
         () =>
             throttle(() => {
                 conversation?.typing();
-
-                // in case the input was already focused, let's make sure to send the `read` status if the customer is typing
                 if (conversation?.lastReadMessageIndex !== conversation?.lastMessage?.index) {
                     conversation?.setAllMessagesRead();
                 }
@@ -47,25 +39,23 @@ export const MessageInput = () => {
         [conversation]
     );
 
-    const isSubmitDisabled = (!text.trim() && !attachedFiles?.length) || isSending;
+    const isSubmitDisabled = (!text.trim() && attachedFiles.length === 0) || isSending;
 
     const send = async () => {
-        if (isSubmitDisabled) {
+        if (isSubmitDisabled || !conversation) {
+            log.error("Failed sending message: no conversation or input is empty");
             return;
         }
-        if (!conversation) {
-            log.error("Failed sending message: no conversation found");
-            return;
-        }
-        setIsSending(true);
 
-        let preparedMessage = conversation.prepareMessage();
-        preparedMessage = preparedMessage.setBody(text);
+        setIsSending(true);
+        const preparedMessage = conversation.prepareMessage().setBody(text);
+
         attachedFiles.forEach((file: File) => {
             const formData = new FormData();
             formData.append(file.name, file);
             preparedMessage.addMedia(formData);
         });
+
         await preparedMessage.build().send();
         setText("");
         dispatch(detachFiles(attachedFiles));
@@ -82,9 +72,8 @@ export const MessageInput = () => {
         }
     };
 
-    const onChange = (val: ChangeEvent<HTMLTextAreaElement>) => {
-        setText(val.target.value);
-
+    const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        setText(e.target.value);
         throttleChange();
     };
 
@@ -95,13 +84,10 @@ export const MessageInput = () => {
     useEffect(() => {
         textAreaRef.current?.setAttribute("rows", "1");
         textAreaRef.current?.focus();
-    }, [textAreaRef]);
+    }, []);
 
-    // Ensuring attached files are automatically scrolled to
     useEffect(() => {
-        if (!attachmentsBoxRef.current) {
-            return;
-        }
+        if (!attachmentsBoxRef.current) return;
 
         if (attachedFiles.length > oldAttachmentsLength.current) {
             (attachmentsBoxRef.current.lastChild as Element)?.scrollIntoView();
@@ -111,21 +97,14 @@ export const MessageInput = () => {
     }, [attachedFiles]);
 
     return (
-        <Box
-            as="form"
-            {...formStyles}
-            onSubmit={(e) => {
-                e.preventDefault();
-                send();
-            }}
-        >
-            <InputBox element="MESSAGE_INPUT_BOX" disabled={isSending}>
-                <Box as="div" {...innerInputStyles}>
-                    <Box {...textAreaContainerStyles}>
+        <Box as="form" className={classes.formStyles} onSubmit={(e) => { e.preventDefault(); send(); }}>
+            <InputBox element="MESSAGE_INPUT_BOX" disabled={isSending} >
+                <Box as="div" className={classes.innerInputStyles}>
+                    <Box className={classes.textAreaContainerStyles}>
                         <TextArea
                             ref={textAreaRef}
                             data-test="message-input-textarea"
-                            placeholder="Type your message"
+                            placeholder="כתיבת הודעה..."
                             value={text}
                             element="MESSAGE_INPUT"
                             onChange={onChange}
@@ -133,12 +112,15 @@ export const MessageInput = () => {
                             readOnly={isSending}
                             onKeyPress={onKeyPress}
                             maxLength={CHAR_LIMIT}
+                            
                         />
                     </Box>
-                    <Box {...messageOptionContainerStyles}>
+
+                    <Box className={classes.messageOptionContainerStyles}>
                         {fileAttachmentConfig?.enabled && <AttachFileButton textAreaRef={textAreaRef} />}
                     </Box>
-                    <Box {...messageOptionContainerStyles}>
+
+                    <Box className={classes.messageOptionContainerStyles}>
                         <Button
                             data-test="message-send-button"
                             variant="primary_icon"
@@ -146,15 +128,20 @@ export const MessageInput = () => {
                             type="submit"
                             aria-disabled={isSubmitDisabled}
                         >
-                            <SendIcon decorative={false} title="Send message" size="sizeIcon30" />
+                            &gt;
                         </Button>
                     </Box>
                 </Box>
-                {attachedFiles && (
-                    <Box data-test="message-attachments" {...filePreviewContainerStyles} ref={attachmentsBoxRef}>
+
+                {attachedFiles.length > 0 && (
+                    <Box
+                        data-test="message-attachments"
+                        className={classes.filePreviewContainerStyles}
+                        ref={attachmentsBoxRef}
+                    >
                         {attachedFiles.map((file, index) => (
                             <FilePreview
-                                focusable={true}
+                                focusable
                                 key={index}
                                 file={file}
                                 isBubble={false}

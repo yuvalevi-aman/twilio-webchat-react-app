@@ -10,5 +10,5 @@ export const progressStyles: BoxStyleProps = {
     display: "flex",
     flexDirection: "column",
     marginLeft: "space60",
-    alignItems: "flex-start"
+    alignItems: "flex-end",
 };

@@ -11,16 +11,7 @@ import { SuccessIcon } from "@twilio-paste/icons/esm/SuccessIcon";
 import { AppState } from "../store/definitions";
 import { FilePreview } from "./FilePreview";
 import { parseMessageBody } from "../utils/parseMessageBody";
-import {
-    getAvatarContainerStyles,
-    getInnerContainerStyles,
-    authorStyles,
-    timeStampStyles,
-    bodyStyles,
-    outerContainerStyles,
-    readStatusStyles,
-    bubbleAndAvatarContainerStyles
-} from "./styles/MessageBubble.styles";
+import classes from "./styles/MessageBubble.module.scss";
 
 const doubleDigit = (number: number) => `${number < 10 ? 0 : ""}${number}`;
 
@@ -93,18 +84,11 @@ export const MessageBubble = ({
         }
     };
 
-    const handleMouseDown = () => {
-        setIsMouseDown(true);
-    };
-
-    const handleMouseUp = () => {
-        setIsMouseDown(false);
-    };
+    const handleMouseDown = () => setIsMouseDown(true);
+    const handleMouseUp = () => setIsMouseDown(false);
 
     const handleFocus = () => {
-        // Ignore focus from clicks
         if (!isMouseDown) {
-            // Necessary since screen readers can set the focus to any focusable element
             updateFocus(message.index);
         }
     };
@@ -113,7 +97,7 @@ export const MessageBubble = ({
 
     return (
         <Box
-            {...outerContainerStyles}
+            className={classes.outerContainer}
             tabIndex={focusable ? 0 : -1}
             onFocus={handleFocus}
             onKeyDown={handleKeyDown}
@@ -123,15 +107,25 @@ export const MessageBubble = ({
             data-message-bubble
             data-testid="message-bubble"
         >
-            <Box {...bubbleAndAvatarContainerStyles}>
+            <Box className={classes.bubbleAndAvatarContainer}>
                 {!belongsToCurrentUser && (
-                    <Box {...getAvatarContainerStyles(!isLastOfUserGroup)} data-testid="avatar-container">
+                    <Box
+                        className={`${classes.avatarContainer} ${
+                            !isLastOfUserGroup ? classes["with-placeholder"] : classes["with-avatar"]
+                        }`}
+                        data-testid="avatar-container"
+                    >
                         {isLastOfUserGroup && <UserIcon decorative={true} size="sizeIcon40" />}
                     </Box>
                 )}
-                <Box {...getInnerContainerStyles(belongsToCurrentUser)}>
+
+                <Box
+                    className={`${classes.innerContainer} ${
+                        belongsToCurrentUser ? classes.currentUser : classes.otherUser
+                    }`}
+                >
                     <Flex hAlignContent="between" width="100%" vAlignContent="center" marginBottom="space20">
-                        <Text {...authorStyles} as="p" aria-hidden style={{ textOverflow: "ellipsis" }} title={author}>
+                        <Text as="p" className={classes.author} title={author}>
                             {author}
                         </Text>
                         <ScreenReaderOnly as="p">
@@ -139,21 +133,24 @@ export const MessageBubble = ({
                                 ? "You sent at"
                                 : `${users?.find((u) => u.identity === message.author)?.friendlyName} sent at`}
                         </ScreenReaderOnly>
-                        <Text {...timeStampStyles} as="p">
+                        <Text as="p" className={classes.timeStamp}>
                             {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(
                                 message.dateCreated.getMinutes()
                             )}`}
                         </Text>
                     </Flex>
-                    <Text as="p" {...bodyStyles}>
+
+                    <Text as="p" className={classes.body}>
                         {message.body ? parseMessageBody(message.body, belongsToCurrentUser) : null}
                     </Text>
+
                     {message.type === "media" ? renderMedia() : null}
                 </Box>
             </Box>
+
             {read && (
                 <Flex hAlignContent="right" vAlignContent="center" marginTop="space20">
-                    <Text as="p" {...readStatusStyles}>
+                    <Text as="p" className={classes.readStatus}>
                         Read
                     </Text>
                     <SuccessIcon decorative={true} size="sizeIcon10" color="colorTextWeak" />
