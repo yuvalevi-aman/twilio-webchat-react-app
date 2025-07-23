@@ -1,0 +1,36 @@
+@import '../../styles/main.scss';
+
+.separatorContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: $space-30;
+  margin-bottom: $space-60;
+}
+
+.separatorLine {
+  flex: 1;
+  border-style: solid;
+  &.new {
+    border-color: $color-border-error;
+  }
+  &.default {
+    border-color: $color-border-weak;
+  }
+  border-width: $border-width-0;
+  border-top-width: $border-width-10;
+}
+
+.separatorText {
+  font-size: $font-size-20;
+  margin-left: $space-40;
+  margin-right: $space-40;
+  &.new {
+    color: $color-text-error;
+  }
+  &.default {
+    color: $color-text;
+  }
+} 

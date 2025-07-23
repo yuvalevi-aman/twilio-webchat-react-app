@@ -2,12 +2,8 @@ import { Message } from "@twilio/conversations";
 import { Box } from "@twilio-paste/core/box";
 import { Text } from "@twilio-paste/core/text";
 
+import styles from "./styles/MessageListSeparator.module.scss";
 import { getDaysOld } from "../utils/getDaysOld";
-import {
-    separatorContainerStyles,
-    getSeparatorLineStyles,
-    getSeparatorTextStyles
-} from "./styles/MessageListSeparator.styles";
 import { SeparatorType } from "./definitions";
 
 export const MessageListSeparator = ({
@@ -36,12 +32,21 @@ export const MessageListSeparator = ({
     };
 
     return (
-        <Box {...separatorContainerStyles} data-test="new-message-separator" role="separator">
-            <Box {...getSeparatorLineStyles(separatorType)} aria-hidden="true" />
-            <Text as="p" {...getSeparatorTextStyles(separatorType)}>
+        <Box className={styles.separatorContainer} data-test="new-message-separator" role="separator">
+            <Box className={[
+                styles.separatorLine,
+                separatorType === "new" ? styles.new : styles.default
+            ].join(' ')} aria-hidden="true" />
+            <Text as="p" className={[
+                styles.separatorText,
+                separatorType === "new" ? styles.new : styles.default
+            ].join(' ')}>
                 {getSeparatorText()}
             </Text>
-            <Box {...getSeparatorLineStyles(separatorType)} aria-hidden="true" />
+            <Box className={[
+                styles.separatorLine,
+                separatorType === "new" ? styles.new : styles.default
+            ].join(' ')} aria-hidden="true" />
         </Box>
     );
 };

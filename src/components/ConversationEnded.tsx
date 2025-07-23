@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { sessionDataHandler } from "../sessionDataHandler";
 import { changeEngagementPhase, updatePreEngagementData } from "../store/actions/genericActions";
 import { EngagementPhase, AppState } from "../store/definitions";
-import { containerStyles, textStyles, titleStyles } from "./styles/ConversationEnded.styles";
+import styles from "./styles/ConversationEnded.module.scss";
 import type { Transcript } from "./Transcript";
 
 export const ConversationEnded = () => {
@@ -34,8 +34,8 @@ export const ConversationEnded = () => {
     }
 
     return (
-        <Box {...containerStyles}>
-            <Text as="h3" {...titleStyles}>
+        <Box className={styles.container}>
+            <Text as="h3" className={styles.title}>
                 Thanks for chatting with us!
             </Text>
             {TranscriptComponent ? (
@@ -48,7 +48,7 @@ export const ConversationEnded = () => {
             ) : (
                 <Fragment />
             )}
-            <Text as="p" {...textStyles}>
+            <Text as="p" className={styles.text}>
                 If you have any more questions, feel free to reach out again.
             </Text>
             <Button variant="primary" data-test="start-new-chat-button" onClick={handleStartNewChat}>

@@ -3,14 +3,14 @@ import { useSelector } from "react-redux";
 
 import { AppState } from "../store/definitions";
 import { NotificationBarItem } from "./NotificationBarItem";
-import { notificationBarContainerStyles, notificationBarStyles } from "./styles/NotificationBar.styles";
+import styles from "./styles/NotificationBar.module.scss";
 
 export const NotificationBar = () => {
     const notifications = useSelector((store: AppState) => store.notifications);
 
     return (
-        <Box {...notificationBarContainerStyles}>
-            <Box {...notificationBarStyles}>
+        <Box className={styles.notificationBarContainer}>
+            <Box className={styles.notificationBar}>
                 {notifications.map((notification) => (
                     <NotificationBarItem key={notification.id} {...notification} />
                 ))}

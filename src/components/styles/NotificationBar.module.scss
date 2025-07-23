@@ -1,0 +1,12 @@
+@import '../../styles/main.scss';
+
+.notificationBarContainer {
+  position: relative;
+}
+
+.notificationBar {
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  z-index: $z-index-10;
+} 

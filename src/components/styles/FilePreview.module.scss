@@ -1,0 +1,81 @@
+@import '../../styles/main.scss';
+
+.outerContainer {
+  position: relative;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  height: fit-content;
+  width: 100%;
+  align-items: center;
+  padding-top: $space-30;
+  padding-bottom: $space-30;
+  padding-left: $space-30;
+  margin-top: $space-30;
+  margin-bottom: $space-30;
+  border-color: $color-border-weak;
+  border-width: $border-width-10;
+  border-style: solid;
+  border-radius: $border-radius-20;
+  background: inherit;
+  color: inherit;
+  &.bubble {
+    padding-right: $space-30;
+  }
+  &.notBubble {
+    padding-right: $space-120;
+  }
+  &:hover:not(.disabled) {
+    cursor: pointer;
+    border-color: inherit;
+  }
+  &:focus-visible:not(.disabled) {
+    box-shadow: $shadow-focus;
+    border-color: transparent;
+    outline: none;
+  }
+}
+
+.fileIconContainer {
+  padding-left: $space-20;
+  padding-right: $space-50;
+}
+
+.actionIconContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  margin: $space-50;
+  margin-right: $space-40;
+  color: $color-text-weaker;
+  &:hover {
+    color: inherit;
+  }
+}
+
+.fileDescriptionContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  text-align: left;
+}
+
+.fileName {
+  color: inherit;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-20;
+  line-height: $line-height-10;
+}
+
+.fileSize {
+  color: inherit;
+  font-size: $font-size-10;
+  line-height: $line-height-10;
+} 

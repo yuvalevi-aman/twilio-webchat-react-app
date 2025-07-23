@@ -14,15 +14,7 @@ import { addNotification, detachFiles } from "../store/actions/genericActions";
 import { AppState } from "../store/definitions";
 import { notifications } from "../notifications";
 import { roundFileSizeInMB } from "../utils/roundFileSizeInMB";
-import {
-    actionIconContainerStyles,
-    fileDescriptionContainerStyles,
-    fileIconContainerStyles,
-    fileNameStyles,
-    fileSizeStyles,
-    getContainerStyles,
-    outerContainerStyles
-} from "./styles/FilePreview.styles";
+import styles from "./styles/FilePreview.module.scss";
 
 interface FilePreviewProps {
     file: File;
@@ -85,13 +77,17 @@ export const FilePreview = (props: FilePreviewProps) => {
     };
 
     return (
-        <Box {...outerContainerStyles}>
+        <Box className={styles.outerContainer}>
             <Box
                 as="button"
                 type="button"
                 appearance="none"
                 data-test="file-preview-main-area"
-                {...getContainerStyles(isBubble, disabled)}
+                className={[
+                  styles.container,
+                  isBubble ? styles.bubble : styles.notBubble,
+                  disabled ? styles.disabled : ''
+                ].join(' ')}
                 onClick={handleBoxClick}
                 onMouseEnter={() => setIsHovered(true)}
                 onFocus={() => setIsHovered(true)}
@@ -99,19 +95,19 @@ export const FilePreview = (props: FilePreviewProps) => {
                 onBlur={() => setIsHovered(false)}
                 tabIndex={focusable ? 0 : -1}
             >
-                <Box {...fileIconContainerStyles}>
+                <Box className={styles.fileIconContainer}>
                     <FileIcon decorative={false} title="File attachment" size="sizeIcon40" />
                 </Box>
-                <Box {...fileDescriptionContainerStyles}>
-                    <Text as="h1" {...fileNameStyles}>
+                <Box className={styles.fileDescriptionContainer}>
+                    <Text as="h1" className={styles.fileName}>
                         <Truncate title={file.name}>{file.name}</Truncate>
                     </Text>
-                    <Text as="p" {...fileSizeStyles}>
+                    <Text as="p" className={styles.fileSize}>
                         {isHovered ? "Click to open" : `${roundFileSizeInMB(file.size)}MB`}
                     </Text>
                 </Box>
             </Box>
-            <Box {...actionIconContainerStyles}>
+            <Box className={styles.actionIconContainer}>
                 {!isBubble && (
                     <Button
                         variant="secondary_icon"
