@@ -3,3 +3,14 @@
   justify-content: center;
   align-items: center;
 }
+@mixin baseButton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $font-color-primary;
+        font-family: $font-family-ikea;
+        font-size: $font-size-30;
+        
+        cursor: pointer;
+        transition: background-color 0.2s, box-shadow 0.2s;
+    }

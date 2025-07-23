@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { Conversation } from "@twilio/conversations";
 
 
-import { EngagementPhase, Notification, PreEngagementData, StudioFlowData } from "../definitions";
+import { EngagementPhase, Notification, PreEngagementData, StudioFlowData ,ChatStep} from "../definitions";
 import {
     ACTION_ADD_MULTIPLE_MESSAGES,
     ACTION_ADD_NOTIFICATION,
@@ -12,7 +12,8 @@ import {
     ACTION_DETACH_FILES,
     ACTION_REMOVE_NOTIFICATION,
     ACTION_UPDATE_PRE_ENGAGEMENT_DATA,
-    ACTION_SET_STUDIO_FLOW_DATA
+    ACTION_SET_STUDIO_FLOW_DATA,
+    ACTION_UPDATE_CHAT_HISTORY
 } from "./actionTypes";
 import { MESSAGES_LOAD_COUNT } from "../../constants";
 
@@ -97,3 +98,13 @@ export function setStudioFlowData(data: StudioFlowData) {
         }
     };
 }
+
+export const updateChatHistory = (chatHistory: ChatStep[]) => ({
+    type: ACTION_UPDATE_CHAT_HISTORY,
+    payload: { chatHistory }
+});
+
+export const setConversationSid = (conversationSid: string) => ({
+    type: 'SET_CONVERSATION_SID',
+    payload: conversationSid
+});

@@ -20,6 +20,7 @@ type MessageAttributes = {
     customAttribute: string;
     anotherFlag: boolean;
     buttons: Button[];
+    conversationSid?: string;
 };
 
 export type StudioFlowData = {
@@ -57,6 +58,7 @@ export type SessionState = {
     conversationState?: "active" | "inactive" | "closed";
     preEngagementData: PreEngagementData;
     studioFlowData: StudioFlowData;
+     chatHistory: ChatStep[];
 };
 
 export type ConfigState = {
@@ -85,4 +87,13 @@ export type AppState = {
     config: ConfigState;
     session: SessionState;
     notifications: NotificationState;
+};
+
+export type ChatStep = {
+    botMessage: string;
+    userResponse?: string;
+    options: string[];
+    widgetId: string;
+    botTimestamp: Date;
+    userTimestamp?: Date;
 };

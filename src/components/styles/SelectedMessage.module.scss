@@ -1,0 +1,22 @@
+@import '../../styles/main.scss';
+
+.userResponseContainer{
+           display: flex;
+            flex-direction: column;
+            .userResponse{
+                @include baseButton;
+                background-color: $ui-color-black;
+                color: $ui-color-white;
+                border-radius:  $border-radius-0 $border-radius-25 $border-radius-25 $border-radius-25;
+                align-self: flex-end;
+                padding: $space-30 $space-40;
+                max-width: 250px;
+                cursor: default;
+            }
+            
+                .timestampInside {
+                    font-size: 10.5px;
+                    color: #888;
+                    text-align: left;
+            }
+        }

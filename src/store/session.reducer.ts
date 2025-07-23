@@ -7,12 +7,14 @@ import {
     ACTION_START_SESSION,
     ACTION_UPDATE_SESSION_DATA,
     ACTION_UPDATE_PRE_ENGAGEMENT_DATA,
-    ACTION_SET_STUDIO_FLOW_DATA
+    ACTION_SET_STUDIO_FLOW_DATA,
+    ACTION_UPDATE_CHAT_HISTORY,
+    SET_CONVERSATION_SID
 } from "./actions/actionTypes";
 
 const defaultStudioFlowData: StudioFlowData = {
- messageBody: "",
-    currentWidget: "",  
+    messageBody: "",
+    currentWidget: "",
     messageAttributes: {
         widgetName: "",
         customAttribute: "",
@@ -20,7 +22,6 @@ const defaultStudioFlowData: StudioFlowData = {
         buttons: []
     }
 };
-
 
 const initialState: SessionState = {
     currentPhase: EngagementPhase.Loading,
@@ -38,7 +39,8 @@ const initialState: SessionState = {
         email: '',
         query: ''
     },
-    studioFlowData: defaultStudioFlowData
+    studioFlowData: defaultStudioFlowData,
+    chatHistory: []
 };
 
 export const SessionReducer: Reducer<SessionState, AnyAction> = (
@@ -85,7 +87,23 @@ export const SessionReducer: Reducer<SessionState, AnyAction> = (
         case ACTION_SET_STUDIO_FLOW_DATA:
             return {
                 ...state,
-                studioFlowData: action.payload.studioFlowData
+                studioFlowData: {
+                    currentWidget: action.payload.studioFlowData.currentWidget,
+                    messageBody: action.payload.studioFlowData.messageBody,
+                    messageAttributes: action.payload.studioFlowData.messageAttributes
+                }
+            };
+
+        case ACTION_UPDATE_CHAT_HISTORY:
+            return {
+                ...state,
+                chatHistory: action.payload.chatHistory
+            };
+
+        case SET_CONVERSATION_SID:
+            return {
+                ...state,
+                conversationSid: action.payload
             };
 
         default:
