@@ -19,8 +19,7 @@
   &.default {
     border-color: $color-border-weak;
   }
-  border-width: $border-width-0;
-  border-top-width: $border-width-10;
+
 }
 
 .separatorText {
@@ -28,9 +27,7 @@
   margin-left: $space-40;
   margin-right: $space-40;
   &.new {
-    color: $color-text-error;
   }
   &.default {
-    color: $color-text;
   }
 } 

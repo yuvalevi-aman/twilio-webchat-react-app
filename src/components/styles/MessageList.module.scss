@@ -28,13 +28,12 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 48px; // יש להמיר ל-MESSAGES_SPINNER_BOX_HEIGHT אם יש משתנה מתאים
+  height: 48px; 
 }
 
 .participantTyping {
   font-size: $font-size-10;
   font-style: italic;
-  color: $color-text-weak;
   margin-top: auto;
 }
 
@@ -51,5 +50,4 @@
 .conversationEventDate {
   font-size: $font-size-20;
   font-style: italic;
-  color: $color-text-weak;
 } 
