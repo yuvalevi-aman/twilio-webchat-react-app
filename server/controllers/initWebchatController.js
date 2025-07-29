@@ -68,10 +68,10 @@ const sendWelcomeMessage = (conversationSid, customerFriendlyName) => {
     logInterimAction("Sending welcome message");
     return getTwilioClient()
         .conversations.conversations(conversationSid)
-        .messages.create({
-            body: `Welcome ${customerFriendlyName}! An agent will be with you in just a moment.`,
-            author: "Concierge"
-        })
+        // .messages.create({
+        //     body: `Welcome ${customerFriendlyName}! An agent will be with you in just a moment.`,
+        //     author: "Concierge"
+        // })
         .then(() => {
             logInterimAction("(async) Welcome message sent");
         })

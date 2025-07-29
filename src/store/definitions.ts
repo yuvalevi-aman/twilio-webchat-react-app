@@ -38,6 +38,7 @@ export type SessionState = {
 
 export type ConfigState = {
     serverUrl?: string;
+    showPreEngagementForm?: boolean;
     theme?: {
         isLight?: boolean;
         overrides?: Partial<GenericThemeShape>;

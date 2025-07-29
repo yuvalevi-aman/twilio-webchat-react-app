@@ -208,13 +208,14 @@ export const MessageList = () => {
             return (
                 <Box data-test="all-message-bubbles" key={message.index}>
                     {renderSeparatorIfApplicable(message, i)}
-                    <MessageBubble
-                        message={message}
-                        isLast={i === messages.length - 1}
-                        isLastOfUserGroup={isLastOfUserGroup(message, i, messages)}
-                        focusable={message.index === focusIndex}
-                        updateFocus={updateFocus}
-                    />
+                   <MessageBubble
+  message={message}
+  isLast={i === messages.length - 1}
+  isLastOfUserGroup={isLastOfUserGroup(message, i, messages)}
+  focusable={message.index === focusIndex}
+  updateFocus={updateFocus}
+/>
+
                 </Box>
             );
         });
