@@ -1,0 +1,39 @@
+@import './variables.scss';
+
+.form {
+  border-top-color: $color-border-weaker;
+  border-top-width: 1px;
+  border-top-style: solid;
+  padding: $space-20;
+}
+
+.innerInput {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.textAreaContainer {
+  margin-top: auto;
+  margin-bottom: auto;
+  flex: 1;
+}
+
+.messageOptionContainer {
+  margin: $space-30;
+  margin-left: $space-20;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
+
+.filePreviewContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  max-height: 300px;
+  position: relative;
+  padding-left: $space-30;
+  padding-right: $space-30;
+} 

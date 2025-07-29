@@ -1,0 +1,20 @@
+@import './variables.scss';
+
+.form {
+  padding: $space-40;
+  padding-top: $space-80;
+  overflow: auto;
+}
+
+.title {
+  font-size: $font-size-70;
+  margin-bottom: $space-60;
+}
+
+.intro {
+  margin-bottom: $space-70;
+}
+
+.field {
+  margin-bottom: $space-70;
+} 

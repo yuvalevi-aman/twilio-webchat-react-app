@@ -1,0 +1,18 @@
+@import './variables.scss';
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-background-primary-stronger;
+  padding: $space-20;
+  padding-top: $space-40;
+  padding-bottom: $space-40;
+  border-top-left-radius: $border-radius-20;
+  border-top-right-radius: $border-radius-20;
+}
+
+.title {
+  color: $color-text-weakest;
+  padding-left: $space-30;
+} 

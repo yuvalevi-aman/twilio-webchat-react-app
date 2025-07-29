@@ -1,0 +1,22 @@
+@import './variables.scss';
+
+.rootContainer {
+  .outerContainer {
+    position: fixed;
+    bottom: $space-50;
+    right: $space-60;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .innerContainer {
+    box-shadow: $shadow;
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    height: 590px;
+    margin-bottom: $space-50;
+    border-radius: $border-radius-30;
+    background-color: $color-background-body;
+  }
+} 

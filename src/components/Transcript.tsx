@@ -11,8 +11,8 @@ import JSZip from "jszip";
 import saveAs from "file-saver";
 
 import { contactBackend } from "../sessionDataHandler";
-import { textStyles } from "./styles/ConversationEnded.styles";
-import { buttonStyles, progressStyles } from "./styles/Transcript.styles";
+import classes from "./styles/Transcript.module.scss";
+import endedClasses from "./styles/ConversationEnded.module.scss";
 import {
     getTranscriptData,
     getAgentNames,
@@ -125,9 +125,9 @@ export const Transcript = (props: TranscriptProps) => {
         return (
             <Button variant="secondary" data-test="download-transcript-button" onClick={handleDownloadTranscript}>
                 {isDownloadingTranscript ? (
-                    <Box {...buttonStyles}>
+                    <Box className={classes.button}>
                         <Spinner title="Loading" decorative={false} />
-                        <Box {...progressStyles}>
+                        <Box className={classes.progress}>
                             <Text as="span" fontSize="fontSize20" lineHeight="lineHeight10">
                                 {" "}
                                 Download
@@ -165,9 +165,9 @@ export const Transcript = (props: TranscriptProps) => {
             <Box marginLeft="space40">
                 <Button variant="secondary" data-test="email-transcript-button" onClick={handleEmailTranscript}>
                     {isEmailingTranscript ? (
-                        <Box {...buttonStyles}>
+                        <Box className={classes.button}>
                             <Spinner title="Loading" decorative={false} />
-                            <Box {...progressStyles}>
+                            <Box className={classes.progress}>
                                 <Text as="span" fontSize="fontSize20" lineHeight="lineHeight10">
                                     {" "}
                                     Send to my email
@@ -203,7 +203,7 @@ export const Transcript = (props: TranscriptProps) => {
 
     return (
         <>
-            <Text as="p" {...textStyles}>
+            <Text as="p" className={endedClasses.text}>
                 Do you want a transcript of our chat?
             </Text>
             <Flex>

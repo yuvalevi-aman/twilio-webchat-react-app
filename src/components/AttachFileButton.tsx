@@ -4,7 +4,7 @@ import { Button } from "@twilio-paste/core/button";
 import { AttachIcon } from "@twilio-paste/icons/esm/AttachIcon";
 
 import { AppState } from "../store/definitions";
-import { hiddenInputStyles } from "./styles/AttachFileButton.styles";
+import classes from "./styles/AttachFileButton.module.scss";
 import { validateFiles } from "../utils/validateFiles";
 import { attachFiles } from "../store/actions/genericActions";
 
@@ -31,17 +31,7 @@ export const AttachFileButton = ({ textAreaRef }: { textAreaRef?: React.RefObjec
 
     return (
         <Button variant="secondary_icon" size="icon_small" onClick={() => fileInputRef.current?.click()}>
-            <input
-                style={hiddenInputStyles}
-                onChange={onFileChange}
-                type="file"
-                accept={
-                    fileAttachmentConfig?.acceptedExtensions &&
-                    fileAttachmentConfig.acceptedExtensions.map((e) => `.${e}`).join(",")
-                }
-                ref={fileInputRef}
-                multiple
-            />
+            <input className={classes.hiddenInput} />
             <AttachIcon decorative={false} title="Add file attachment" />
         </Button>
     );

@@ -12,16 +12,7 @@ import { Button } from "@twilio-paste/core/button";
 import { AppState } from "../store/definitions";
 import { FilePreview } from "./FilePreview";
 import { parseMessageBody } from "../utils/parseMessageBody";
-import {
-  getAvatarContainerStyles,
-  getInnerContainerStyles,
-  authorStyles,
-  timeStampStyles,
-  bodyStyles,
-  outerContainerStyles,
-  readStatusStyles,
-  bubbleAndAvatarContainerStyles
-} from "./styles/MessageBubble.styles";
+import classes from "./styles/MessageBubble.module.scss";
 
 const doubleDigit = (number: number) => `${number < 10 ? 0 : ""}${number}`;
 
@@ -134,7 +125,7 @@ const renderInteractiveOptions = () => {
 
   return (
     <Box
-      {...outerContainerStyles}
+      className={classes.outerContainer}
       tabIndex={focusable ? 0 : -1}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
@@ -144,27 +135,27 @@ const renderInteractiveOptions = () => {
       data-message-bubble
       data-testid="message-bubble"
     >
-      <Box {...bubbleAndAvatarContainerStyles}>
+      <Box className={classes.bubbleAndAvatarContainer}>
         {!belongsToCurrentUser && (
-          <Box {...getAvatarContainerStyles(!isLastOfUserGroup)} data-testid="avatar-container">
+          <Box className={classes.avatarContainer} data-testid="avatar-container">
             {isLastOfUserGroup && <UserIcon decorative={true} size="sizeIcon40" />}
           </Box>
         )}
-        <Box {...getInnerContainerStyles(belongsToCurrentUser)}>
+        <Box className={classes.innerContainer}>
           <Flex hAlignContent="between" width="100%" vAlignContent="center" marginBottom="space20">
-            <Text {...authorStyles} as="p" aria-hidden title={author}>
+            <Text className={classes.author} as="p" aria-hidden title={author}>
               {author}
             </Text>
             <ScreenReaderOnly as="p">
               {belongsToCurrentUser ? "You sent at" : `${author} sent at`}
             </ScreenReaderOnly>
-            <Text {...timeStampStyles} as="p">
+            <Text className={classes.timeStamp} as="p">
               {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
             </Text>
           </Flex>
 
           {message.body && (
-            <Text as="p" {...bodyStyles}>
+            <Text as="p" className={classes.body}>
               {parseMessageBody(message.body, belongsToCurrentUser)}
             </Text>
           )}
@@ -176,7 +167,7 @@ const renderInteractiveOptions = () => {
 
       {read && (
         <Flex hAlignContent="right" vAlignContent="center" marginTop="space20">
-          <Text as="p" {...readStatusStyles}>
+          <Text as="p" className={classes.readStatus}>
             Read
           </Text>
           <SuccessIcon decorative={true} size="sizeIcon10" color="colorTextWeak" />

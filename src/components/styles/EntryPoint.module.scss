@@ -1,0 +1,26 @@
+@import './variables.scss';
+
+.container {
+  border: none;
+  background-color: $color-background-primary;
+  display: flex;
+  height: $size-icon-90;
+  width: $size-icon-90;
+  font-size: $font-size-50;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-circle;
+  color: $color-text-weakest;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  outline: 0px;
+  padding: $space-0;
+
+  &:hover {
+    background-color: $color-background-primary-stronger;
+  }
+  &:focus-visible {
+    background-color: $color-background-primary-stronger;
+    box-shadow: $shadow-focus;
+  }
+} 

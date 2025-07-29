@@ -13,13 +13,7 @@ import { AttachFileButton } from "./AttachFileButton";
 import { FilePreview } from "./FilePreview";
 import { detachFiles } from "../store/actions/genericActions";
 import { CHAR_LIMIT } from "../constants";
-import {
-    formStyles,
-    innerInputStyles,
-    messageOptionContainerStyles,
-    filePreviewContainerStyles,
-    textAreaContainerStyles
-} from "./styles/MessageInput.styles";
+import classes from "./styles/MessageInput.module.scss";
 
 export const MessageInput = () => {
     const dispatch = useDispatch();
@@ -113,15 +107,15 @@ export const MessageInput = () => {
     return (
         <Box
             as="form"
-            {...formStyles}
+            className={classes.form}
             onSubmit={(e) => {
                 e.preventDefault();
                 send();
             }}
         >
             <InputBox element="MESSAGE_INPUT_BOX" disabled={isSending}>
-                <Box as="div" {...innerInputStyles}>
-                    <Box {...textAreaContainerStyles}>
+                <Box as="div" className={classes.innerInput}>
+                    <Box className={classes.textAreaContainer}>
                         <TextArea
                             ref={textAreaRef}
                             data-test="message-input-textarea"
@@ -135,10 +129,10 @@ export const MessageInput = () => {
                             maxLength={CHAR_LIMIT}
                         />
                     </Box>
-                    <Box {...messageOptionContainerStyles}>
+                    <Box className={classes.messageOptionContainer}>
                         {fileAttachmentConfig?.enabled && <AttachFileButton textAreaRef={textAreaRef} />}
                     </Box>
-                    <Box {...messageOptionContainerStyles}>
+                    <Box className={classes.messageOptionContainer}>
                         <Button
                             data-test="message-send-button"
                             variant="primary_icon"
@@ -151,7 +145,7 @@ export const MessageInput = () => {
                     </Box>
                 </Box>
                 {attachedFiles && (
-                    <Box data-test="message-attachments" {...filePreviewContainerStyles} ref={attachmentsBoxRef}>
+                    <Box data-test="message-attachments" className={classes.filePreviewContainer} ref={attachmentsBoxRef}>
                         {attachedFiles.map((file, index) => (
                             <FilePreview
                                 focusable={true}

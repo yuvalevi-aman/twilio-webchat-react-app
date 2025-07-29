@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { changeExpandedStatus } from "../store/actions/genericActions";
 import { AppState } from "../store/definitions";
-import { containerStyles } from "./styles/EntryPoint.styles";
+import classes from "./styles/EntryPoint.module.scss";
 
 export const EntryPoint = () => {
     const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export const EntryPoint = () => {
             as="button"
             data-test="entry-point-button"
             onClick={() => dispatch(changeExpandedStatus({ expanded: !expanded }))}
-            {...containerStyles}
+            className={classes.container}
         >
             {expanded ? (
                 <ChevronDownIcon decorative={false} title="Minimize chat" size="sizeIcon80" />

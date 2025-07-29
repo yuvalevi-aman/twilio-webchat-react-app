@@ -8,7 +8,7 @@ import { PreEngagementFormPhase } from "./PreEngagementFormPhase";
 import { LoadingPhase } from "./LoadingPhase";
 import { EntryPoint } from "./EntryPoint";
 import { Box } from "@twilio-paste/core/box";
-import { innerContainerStyles, outerContainerStyles } from "./styles/RootContainer.styles";
+import classes from "./styles/RootContainer.module.scss";
 
 const getPhaseComponent = (phase: EngagementPhase) => {
   switch (phase) {
@@ -40,9 +40,9 @@ export function RootContainer() {
 
   return (
     <Box>
-      <Box {...outerContainerStyles}>
+      <Box className={classes.outerContainer}>
         {expanded && (
-          <Box data-test="root-container" {...innerContainerStyles}>
+          <Box data-test="root-container" className={classes.innerContainer}>
             {getPhaseComponent(currentPhase)}
           </Box>
         )}

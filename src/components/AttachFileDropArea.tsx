@@ -4,12 +4,7 @@ import { Box } from "@twilio-paste/core/box";
 import { Text } from "@twilio-paste/core/text";
 import { AttachIcon } from "@twilio-paste/icons/esm/AttachIcon";
 
-import {
-    attachIconContainerStyles,
-    attachTitleStyles,
-    containerStyles,
-    dropAreaStyles
-} from "./styles/AttachFileDropArea.styles";
+import classes from "./styles/AttachFileDropArea.module.scss";
 import { validateFiles } from "../utils/validateFiles";
 import { attachFiles } from "../store/actions/genericActions";
 import { AppState } from "../store/definitions";
@@ -70,13 +65,13 @@ export const AttachFileDropArea = ({ children }: { children: React.ReactNode }) 
     };
 
     return (
-        <Box {...containerStyles} onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
+        <Box className={classes.container} onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
             {isDragging && (
-                <Box {...dropAreaStyles}>
-                    <Box {...attachIconContainerStyles}>
+                <Box className={classes.dropArea}>
+                    <Box className={classes.attachIconContainer}>
                         <AttachIcon decorative={true} size="sizeIcon60" />
                     </Box>
-                    <Text as="p" {...attachTitleStyles}>
+                    <Text as="p" className={classes.attachTitle}>
                         Drop a file or image here
                     </Text>
                 </Box>

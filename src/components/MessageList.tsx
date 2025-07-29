@@ -12,16 +12,7 @@ import { getMoreMessages } from "../store/actions/genericActions";
 import { getDaysOld } from "../utils/getDaysOld";
 import { MessageListSeparator } from "./MessageListSeparator";
 import { MESSAGES_SPINNER_BOX_HEIGHT } from "../constants";
-import {
-    conversationEventContainerStyles,
-    conversationEventTitleStyles,
-    conversationEventDateStyles,
-    spinnerContainerStyles,
-    messageListStyles,
-    innerContainerStyles,
-    outerContainerStyles,
-    participantTypingStyles
-} from "./styles/MessageList.styles";
+import classes from "./styles/MessageList.module.scss";
 
 const isLastOfUserGroup = (message: Message, i: number, messages: Message[]) => {
     const nextMessage = messages[i + 1];
@@ -163,11 +154,11 @@ export const MessageList = () => {
     const renderChatStarted = () =>
         hasLoadedAllMessages ? (
             <>
-                <Box {...conversationEventContainerStyles}>
-                    <Text as="h3" {...conversationEventTitleStyles} data-test="chat-started">
+                <Box className={classes.conversationEventContainer}>
+                    <Text as="h3" className={classes.conversationEventTitle} data-test="chat-started">
                         Chat started
                     </Text>
-                    <Text as="p" {...conversationEventDateStyles}>
+                    <Text as="p" className={classes.conversationEventDate}>
                         {conversation?.dateCreated.toLocaleString()}
                     </Text>
                 </Box>
@@ -197,7 +188,7 @@ export const MessageList = () => {
             if (message.index === spinnerIndex) {
                 // Only render loading spinner if there are remaining messages to load
                 return hasLoadedAllMessages ? null : (
-                    <Box {...spinnerContainerStyles} key={message.index}>
+                    <Box className={classes.spinnerContainer} key={message.index}>
                         <Spinner color="colorTextWeak" decorative={false} title="Loading" />
                     </Box>
                 );
@@ -229,13 +220,13 @@ export const MessageList = () => {
     };
 
     return (
-        <Box {...messageListStyles}>
-            <Box {...outerContainerStyles} onScroll={throttle(handleScroll, 1000)} ref={messageListRef} role="main">
+        <Box className={classes.messageList}>
+            <Box className={classes.outerContainer} onScroll={throttle(handleScroll, 1000)} ref={messageListRef} role="main">
                 <Box
                     aria-label="Chat messages"
                     role="log"
                     aria-relevant="additions"
-                    {...innerContainerStyles}
+                    className={classes.innerContainer}
                     tabIndex={focusIndex >= 0 ? -1 : 0}
                     onFocus={handleFocus}
                 >
@@ -244,7 +235,7 @@ export const MessageList = () => {
                     {participants
                         ?.filter((p) => p.isTyping && p.identity !== conversationsClient?.user.identity)
                         .map((p) => (
-                            <Text {...participantTypingStyles} as="p" key={p.identity}>
+                            <Text className={classes.participantTyping} as="p" key={p.identity}>
                                 {users?.find((u) => u.identity === p.identity)?.friendlyName} is typing...
                             </Text>
                         ))}

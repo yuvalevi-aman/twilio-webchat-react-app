@@ -14,7 +14,7 @@ import { AppState, EngagementPhase } from "../store/definitions";
 import { Header } from "./Header";
 import { notifications } from "../notifications";
 import { NotificationBar } from "./NotificationBar";
-import { introStyles, fieldStyles, titleStyles, formStyles } from "./styles/PreEngagementFormPhase.styles";
+import classes from "./styles/PreEngagementFormPhase.module.scss";
 
 export const PreEngagementFormPhase = () => {
     const { name, email, query } = useSelector((state: AppState) => state.session.preEngagementData) || {};
@@ -49,14 +49,14 @@ export const PreEngagementFormPhase = () => {
         <>
             <Header />
             <NotificationBar />
-            <Box as="form" data-test="pre-engagement-chat-form" onSubmit={handleSubmit} {...formStyles}>
-                <Text {...titleStyles} as="h3">
+            <Box as="form" data-test="pre-engagement-chat-form" onSubmit={handleSubmit} className={classes.form}>
+                <Text as="h2" className={classes.title}>
                     Hi there!
                 </Text>
-                <Text {...introStyles} as="p">
+                <Text as="p" className={classes.intro}>
                     We&#39;re here to help. Please give us some info to get started.
                 </Text>
-                <Box {...fieldStyles}>
+                <Box className={classes.field}>
                     <Label htmlFor="name">Name</Label>
                     <Input
                         type="text"
@@ -68,7 +68,7 @@ export const PreEngagementFormPhase = () => {
                         required
                     />
                 </Box>
-                <Box {...fieldStyles}>
+                <Box className={classes.field}>
                     <Label htmlFor="email">Email address</Label>
                     <Input
                         type="email"
@@ -81,7 +81,7 @@ export const PreEngagementFormPhase = () => {
                     />
                 </Box>
 
-                <Box {...fieldStyles}>
+                <Box className={classes.field}>
                     <Label htmlFor="query">How can we help you?</Label>
                     <TextArea
                         placeholder="Ask a question"
