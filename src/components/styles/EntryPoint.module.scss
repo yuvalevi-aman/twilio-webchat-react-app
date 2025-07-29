@@ -2,7 +2,7 @@
 
 .container {
   border: none;
-  background-color: $color-background-primary;
+  background-color: $color-background-main;
   display: flex;
   height: $size-icon-90;
   width: $size-icon-90;
@@ -15,12 +15,4 @@
   transition: background-color 0.2s;
   outline: 0px;
   padding: $space-0;
-
-  &:hover {
-    background-color: $color-background-primary-stronger;
-  }
-  &:focus-visible {
-    background-color: $color-background-primary-stronger;
-    box-shadow: $shadow-focus;
-  }
 } 

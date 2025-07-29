@@ -7,7 +7,9 @@ import { MessagingCanvasPhase } from "./MessagingCanvasPhase";
 import { PreEngagementFormPhase } from "./PreEngagementFormPhase";
 import { LoadingPhase } from "./LoadingPhase";
 import { EntryPoint } from "./EntryPoint";
+
 import { Box } from "@twilio-paste/core/box";
+
 import classes from "./styles/RootContainer.module.scss";
 
 const getPhaseComponent = (phase: EngagementPhase) => {

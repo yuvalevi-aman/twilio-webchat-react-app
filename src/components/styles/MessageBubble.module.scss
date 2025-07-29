@@ -1,4 +1,4 @@
-@import "../../styles/main.scss";
+@import './variables.scss';
 
 .outerContainer {
   display: flex;
@@ -6,7 +6,7 @@
   margin-bottom: $space-40;
 }
 
-.bubbleAndAvatarContainer {
+.bubbleContainer {
   display: flex;
   align-items: flex-end;
 }
@@ -18,20 +18,13 @@
   border-radius: $border-radius-circle;
   overflow: hidden;
   flex: 0 0 auto;
-
-  &.with-placeholder {
-    background-color: transparent;
-  }
-
-  &.with-avatar {
-    background-color: $color-background;
-  }
 }
 
 .innerContainer {
   padding: $space-30 $space-40;
   border-radius: $border-radius-30;
   max-width: 90%;
+ border: 1px solid black;
 
   &.currentUser {
     background-color: $ui-color-light-gray;
@@ -75,3 +68,14 @@
   margin-right: $space-20;
   color: $font-color-primary;
 } 
+
+.messageArray{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0;
+}
+.option{
+  background-color: $color-background-options;
+  border-radius: 10px;
+}

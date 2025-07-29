@@ -89,21 +89,17 @@ const renderInteractiveOptions = () => {
   };
 
   return (
-    <Box marginTop="space40">
-      <Flex>
+    <Box className={classes.messageArray}>
         {buttons.map((opt, i) => (
           <Button
             key={i}
             variant="secondary"
-         
+            className={classes.option}
             onClick={() => handleClick(opt.value)}
-            fullWidth
-            radioGroup="borderRadius40"
           >
             {opt.label}
           </Button>
         ))}
-      </Flex>
     </Box>
   );
 };
@@ -135,24 +131,14 @@ const renderInteractiveOptions = () => {
       data-message-bubble
       data-testid="message-bubble"
     >
-      <Box className={classes.bubbleAndAvatarContainer}>
-        {!belongsToCurrentUser && (
-          <Box className={classes.avatarContainer} data-testid="avatar-container">
-            {isLastOfUserGroup && <UserIcon decorative={true} size="sizeIcon40" />}
-          </Box>
-        )}
+      <Box className={classes.bubbleContainer}>
         <Box className={classes.innerContainer}>
-          <Flex hAlignContent="between" width="100%" vAlignContent="center" marginBottom="space20">
-            <Text className={classes.author} as="p" aria-hidden title={author}>
-              {author}
-            </Text>
             <ScreenReaderOnly as="p">
               {belongsToCurrentUser ? "You sent at" : `${author} sent at`}
             </ScreenReaderOnly>
             <Text className={classes.timeStamp} as="p">
               {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
             </Text>
-          </Flex>
 
           {message.body && (
             <Text as="p" className={classes.body}>
@@ -161,9 +147,9 @@ const renderInteractiveOptions = () => {
           )}
 
           {message.type === "media" && renderMedia()}
-          {renderInteractiveOptions()}
         </Box>
       </Box>
+          {renderInteractiveOptions()}
 
       {read && (
         <Flex hAlignContent="right" vAlignContent="center" marginTop="space20">
