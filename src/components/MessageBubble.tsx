@@ -4,7 +4,6 @@ import { ScreenReaderOnly } from "@twilio-paste/core/screen-reader-only";
 import { useSelector } from "react-redux";
 import { Text } from "@twilio-paste/core/text";
 import { Flex } from "@twilio-paste/core/flex";
-import { UserIcon } from "@twilio-paste/icons/esm/UserIcon";
 import { Key, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { SuccessIcon } from "@twilio-paste/icons/esm/SuccessIcon";
 import { Button } from "@twilio-paste/core/button";
@@ -19,7 +18,6 @@ const doubleDigit = (number: number) => `${number < 10 ? 0 : ""}${number}`;
 export const MessageBubble = ({
   message,
   isLast,
-  isLastOfUserGroup,
   focusable,
   updateFocus
 }: {
@@ -29,6 +27,11 @@ export const MessageBubble = ({
   focusable: boolean;
   updateFocus: (newFocus: number) => void;
 }) => {
+
+    if (!message.body?.trim() && message.type !== "media") {
+    return null;
+  }
+  
   const [read, setRead] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const { conversationsClient, participants, users, fileAttachmentConfig, conversation } = useSelector((state: AppState) => ({
@@ -91,14 +94,13 @@ const renderInteractiveOptions = () => {
   return (
     <Box className={classes.messageArray}>
         {buttons.map((opt, i) => (
-          <Button
+          <button
             key={i}
-            variant="secondary"
             className={classes.option}
             onClick={() => handleClick(opt.value)}
           >
             {opt.label}
-          </Button>
+          </button>
         ))}
     </Box>
   );
@@ -120,7 +122,7 @@ const renderInteractiveOptions = () => {
   const author = users?.find((u) => u.identity === message.author)?.friendlyName || message.author;
 
   return (
-    <Box
+ <Box
       className={classes.outerContainer}
       tabIndex={focusable ? 0 : -1}
       onFocus={handleFocus}
@@ -131,26 +133,22 @@ const renderInteractiveOptions = () => {
       data-message-bubble
       data-testid="message-bubble"
     >
-      <Box className={classes.bubbleContainer}>
-        <Box className={classes.innerContainer}>
-            <ScreenReaderOnly as="p">
-              {belongsToCurrentUser ? "You sent at" : `${author} sent at`}
-            </ScreenReaderOnly>
-            <Text className={classes.timeStamp} as="p">
-              {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
-            </Text>
-
+       
+      <Box className={belongsToCurrentUser ? classes.bubbleContainerUser : classes.bubbleContainer}>
+        <Box className={belongsToCurrentUser ? classes.innerContainerUser : classes.innerContainer}>
           {message.body && (
-            <Text as="p" className={classes.body}>
+            <p className={ belongsToCurrentUser ? classes.bodyUser : classes.body }>
               {parseMessageBody(message.body, belongsToCurrentUser)}
-            </Text>
+            </p>
           )}
 
           {message.type === "media" && renderMedia()}
         </Box>
+          <p className={classes.timeStamp} >
+              {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
+            </p>
       </Box>
           {renderInteractiveOptions()}
-
       {read && (
         <Flex hAlignContent="right" vAlignContent="center" marginTop="space20">
           <Text as="p" className={classes.readStatus}>
@@ -159,6 +157,7 @@ const renderInteractiveOptions = () => {
           <SuccessIcon decorative={true} size="sizeIcon10" color="colorTextWeak" />
         </Flex>
       )}
+     
     </Box>
   );
 };

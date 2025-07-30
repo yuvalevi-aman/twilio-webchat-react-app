@@ -10,7 +10,6 @@ import { MessageBubble } from "./MessageBubble";
 import { AppState } from "../store/definitions";
 import { getMoreMessages } from "../store/actions/genericActions";
 import { getDaysOld } from "../utils/getDaysOld";
-import { MessageListSeparator } from "./MessageListSeparator";
 import { MESSAGES_SPINNER_BOX_HEIGHT } from "../constants";
 import classes from "./styles/MessageList.module.scss";
 
@@ -127,30 +126,6 @@ export const MessageList = () => {
         }
     };
 
-    const renderSeparatorIfApplicable = (message: Message, i: number) => {
-        const belongsToCurrentUser = message.author === conversationsClient?.user.identity;
-        const isFirstUnreadMessage = message.index === (conversation?.lastReadMessageIndex as number) + 1;
-
-        /*
-         * Render date separator above the first message which is the first of a certain date
-         * (the first message of any chunk cannot compare itself with previous,
-         * and the i = 0 date separator is rendered before "Chat started" section)
-         */
-        if (i > 0 && isFirstOfDateGroup(message, i, messages as Message[])) {
-            return <MessageListSeparator message={message} separatorType="date" />;
-        }
-
-        /*
-         * Render New separator above the first unread message
-         * (messages sent by the current user should be treated as inherently read to avoid flicker)
-         */
-        if (isFirstUnreadMessage && !belongsToCurrentUser) {
-            return <MessageListSeparator message={message} separatorType="new" />;
-        }
-
-        return null;
-    };
-
     const renderChatStarted = () =>
         hasLoadedAllMessages ? (
             <>
@@ -170,11 +145,6 @@ export const MessageList = () => {
             return null;
         }
 
-        /*
-         * We use a copy of the messages array where the first message is a placeholder for the loading spinner.
-         * By assigning the loading spinner to the same index and key as the previous message,
-         * we avoid a snappy scroll position change when loading spinner disappears.
-         */
         const spinnerIndex = (messages[0]?.index || 0) - 1;
         const messagesWithSpinner = [
             {
@@ -198,7 +168,6 @@ export const MessageList = () => {
 
             return (
                 <Box data-test="all-message-bubbles" key={message.index}>
-                    {renderSeparatorIfApplicable(message, i)}
                    <MessageBubble
   message={message}
   isLast={i === messages.length - 1}

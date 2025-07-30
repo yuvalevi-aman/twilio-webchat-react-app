@@ -64,7 +64,12 @@ const initWebchat = async (config: ConfigState) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({}),
+        body: JSON.stringify({
+          formData: {
+          friendlyName: "Customer",
+          query: "Hello" 
+        }
+        }),
       });
 
       const data = await response.json();

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Header } from "./Header";
 import { MessageList } from "./MessageList";
-import { MessageInput } from "./MessageInput";
+import { ConditionalMessageInput } from "./ConditionalMessageInput";
 import { AppState } from "../store/definitions";
 import { ConversationEnded } from "./ConversationEnded";
 import { NotificationBar } from "./NotificationBar";
@@ -26,7 +26,7 @@ export const MessagingCanvasPhase = () => {
             <Header />
             <NotificationBar />
             <MessageList />
-            {conversationState === "active" ? <MessageInput /> : <ConversationEnded />}
+            {conversationState === "active" ? <ConditionalMessageInput />: <ConversationEnded />}
         </Wrapper>
     );
 };

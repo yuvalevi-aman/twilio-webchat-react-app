@@ -8,12 +8,13 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    font-family: $font-family-ikea;
   }
   .innerContainer {
     box-shadow: $shadow;
     display: flex;
     flex-direction: column;
-    width: 320px;
+    width: 400px;
     height: 590px;
     margin-bottom: $space-50;
     border-radius: $border-radius-30;

@@ -3,7 +3,7 @@ import { CustomizationProvider, CustomizationProviderProps } from "@twilio-paste
 import { CSSProperties, FC, useEffect } from "react";
 
 import { RootContainer } from "./RootContainer";
-import { AppState, EngagementPhase } from "../store/definitions";
+import { AppState, ConfigState, EngagementPhase } from "../store/definitions";
 import { sessionDataHandler } from "../sessionDataHandler";
 import { initSession } from "../store/actions/initActions";
 import { changeEngagementPhase } from "../store/actions/genericActions";
@@ -12,22 +12,47 @@ const AnyCustomizationProvider: FC<CustomizationProviderProps & { style: CSSProp
 
 export function WebchatWidget() {
     const theme = useSelector((state: AppState) => state.config.theme);
+    const config = useSelector((state: AppState) => state.config);
     const dispatch = useDispatch();
 
     useEffect(() => {
+        const startChatAutomatically = async () => {
+            try {
+                const response = await fetch(`${config.serverUrl}/initWebchat`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        formData: {
+                            friendlyName: "Customer",
+                            query: ""
+                        }
+                    })
+                });
+
+                if (!response.ok) throw new Error("Webchat init failed");
+
+                const { token, conversationSid } = await response.json();
+                sessionDataHandler.fetchAndStoreNewSession({ formData: { token, conversationSid } });
+                dispatch(initSession({ token, conversationSid }));
+            } catch (err) {
+                console.error("Auto-start failed:", err);
+                dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
+            }
+        };
+
         const data = sessionDataHandler.tryResumeExistingSession();
         if (data) {
             try {
                 dispatch(initSession({ token: data.token, conversationSid: data.conversationSid }));
             } catch (e) {
-                // if initSession fails, go to changeEngagement phase - most likely there's something wrong with the store token or conversation sis
                 dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
             }
+        } else if (!config?.showPreEngagementForm) {
+            startChatAutomatically();
         } else {
-            // if no token is stored, got engagement form
             dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
         }
-    }, [dispatch]);
+    }, [dispatch, config]);
 
     return (
         <AnyCustomizationProvider
