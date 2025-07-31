@@ -5,32 +5,13 @@ import { Text } from "@twilio-paste/core/text";
 import { Spinner } from "@twilio-paste/core/spinner";
 import { Message } from "@twilio/conversations";
 import throttle from "lodash.throttle";
+import { isToday } from "date-fns";
 
 import { MessageBubble } from "./MessageBubble";
 import { AppState } from "../store/definitions";
 import { getMoreMessages } from "../store/actions/genericActions";
-import { getDaysOld } from "../utils/getDaysOld";
 import { MESSAGES_SPINNER_BOX_HEIGHT } from "../constants";
 import classes from "./styles/MessageList.module.scss";
-
-const isLastOfUserGroup = (message: Message, i: number, messages: Message[]) => {
-    const nextMessage = messages[i + 1];
-
-    // if there's no message afterwards, it's definitely the last of a group
-    if (!nextMessage) {
-        return true;
-    }
-
-    // if the author of the next message is different from current one's, then yes, this message is last of its group
-    return nextMessage.author !== message.author;
-};
-
-const isFirstOfDateGroup = (message: Message, i: number, messages: Message[]) => {
-    const prevMessage = messages[i - 1];
-
-    // if the previous message has a date older than the current message, this message is the first for this date
-    return getDaysOld(prevMessage.dateCreated) > getDaysOld(message.dateCreated);
-};
 
 export const MessageList = () => {
     const { messages, participants, users, conversation, conversationsClient } = useSelector((state: AppState) => ({
@@ -73,12 +54,10 @@ export const MessageList = () => {
 
     useEffect(() => {
         const messageListener = (message: Message) => {
-            // Should focus latest message if one arrives while messages are not focused
             if (!document.activeElement?.hasAttribute("data-message-bubble")) {
                 setShouldFocusLatest(true);
             }
 
-            // Ensure that any new message sent by the current user is within scroll view.
             const belongsToCurrentUser = message.author === conversationsClient?.user.identity;
             if (belongsToCurrentUser) {
                 scrollToBottom();
@@ -99,7 +78,6 @@ export const MessageList = () => {
                 setHasLoadedAllMessages(totalMessagesCount === messages?.length);
             }
 
-            // if messages were added to state, loading is complete
             if (messages && oldMessagesLength.current < messages?.length) {
                 isLoadingMessages.current = false;
                 oldMessagesLength.current = messages.length;
@@ -114,7 +92,6 @@ export const MessageList = () => {
         const hasReachedTop =
             element.scrollHeight + element.scrollTop - MESSAGES_SPINNER_BOX_HEIGHT <= element.clientHeight;
 
-        // When reaching the top of all messages, load the next chunk
         if (hasReachedTop && conversation && messages && !hasLoadedAllMessages && !isLoadingMessages.current) {
             isLoadingMessages.current = true;
             oldMessagesLength.current = messages.length;
@@ -129,14 +106,15 @@ export const MessageList = () => {
     const renderChatStarted = () =>
         hasLoadedAllMessages ? (
             <>
-                <Box className={classes.conversationEventContainer}>
-                    <Text as="h3" className={classes.conversationEventTitle} data-test="chat-started">
-                        Chat started
-                    </Text>
-                    <Text as="p" className={classes.conversationEventDate}>
-                        {conversation?.dateCreated.toLocaleString()}
-                    </Text>
-                </Box>
+     <Box className={classes.conversationEventContainer}>
+  <p className={classes.conversationEventDate}>
+    {conversation?.dateCreated
+      ? isToday(new Date(conversation.dateCreated))
+        ? "היום"
+        : new Date(conversation.dateCreated).toLocaleDateString("he-IL")
+      : null}
+  </p>
+</Box>
             </>
         ) : null;
 
@@ -154,16 +132,13 @@ export const MessageList = () => {
         ];
 
         return messagesWithSpinner.map((message: Message, i: number) => {
-            // First message in array represents the loading spinner
             if (message.index === spinnerIndex) {
-                // Only render loading spinner if there are remaining messages to load
                 return hasLoadedAllMessages ? null : (
                     <Box className={classes.spinnerContainer} key={message.index}>
                         <Spinner color="colorTextWeak" decorative={false} title="Loading" />
                     </Box>
                 );
             }
-            // Discount loading spinner from indices
             i -= 1;
 
             return (
@@ -171,7 +146,6 @@ export const MessageList = () => {
                    <MessageBubble
   message={message}
   isLast={i === messages.length - 1}
-  isLastOfUserGroup={isLastOfUserGroup(message, i, messages)}
   focusable={message.index === focusIndex}
   updateFocus={updateFocus}
 />

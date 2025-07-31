@@ -19,11 +19,30 @@ export const ConversationEnded = () => {
         transcriptConfig: state.config.transcript
     }));
 
-    const handleStartNewChat = () => {
+const handleStartNewChat = async () => {
+    try {
         sessionDataHandler.clear();
         dispatch(updatePreEngagementData({ email: "", name: "", query: "" }));
+
+        const response = await fetch(`${window.store.getState().config.serverUrl}/initWebchat`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ formData: { friendlyName: "Customer" } })
+        });
+
+        if (!response.ok) throw new Error("Webchat init failed");
+
+        const { token, conversationSid } = await response.json();
+
+        sessionDataHandler.fetchAndStoreNewSession({ formData: { token, conversationSid } });
+        dispatch({ type: "INIT_SESSION", payload: { token, conversationSid } });
+
+        dispatch(changeEngagementPhase({ phase: EngagementPhase.MessagingCanvas }));
+    } catch (err) {
+        console.error("Failed to start new chat:", err);
         dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
-    };
+    }
+};
 
     let TranscriptComponent: typeof Transcript | undefined = undefined;
 

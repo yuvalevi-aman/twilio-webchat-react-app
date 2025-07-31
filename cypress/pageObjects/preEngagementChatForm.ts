@@ -1,9 +1,9 @@
 import * as Constants from "../utils/constants";
 
 const PreEngagementChatForm = {
-    toggleWebchatExpanded() {
-        cy.get('[data-test="entry-point-button"]').click();
-    },
+    // toggleWebchatExpanded() {
+    //     cy.get('[data-test="entry-point-button"]').click();
+    // },
 
     getStartChatButton() {
         return cy.get('button[data-test="pre-engagement-start-chat-button"]');

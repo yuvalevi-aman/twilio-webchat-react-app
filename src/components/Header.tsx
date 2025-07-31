@@ -3,13 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { AppState } from "../store/definitions";
 import { changeExpandedStatus } from "../store/actions/genericActions";
-
 import { SvgWrapper } from "./SvgWrapper"
 import { ReactComponent as SpeechBubbleIcon } from "./icons/speech_bubble.svg";
 import { ReactComponent as Negishut } from "./icons/negishut1.svg";
 import { ReactComponent as Cross } from "./icons/cross.svg";
 import { ReactComponent as Chevron } from "./icons/chevron_down.svg";
-
 import classes from "./styles/Header.module.scss";
 
 export const Header = ({ customTitle }: { customTitle?: string }) => {

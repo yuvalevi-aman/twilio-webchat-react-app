@@ -1,12 +1,10 @@
 import { Media, Message } from "@twilio/conversations";
 import { Box } from "@twilio-paste/core/box";
-import { ScreenReaderOnly } from "@twilio-paste/core/screen-reader-only";
 import { useSelector } from "react-redux";
 import { Text } from "@twilio-paste/core/text";
 import { Flex } from "@twilio-paste/core/flex";
 import { Key, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { SuccessIcon } from "@twilio-paste/icons/esm/SuccessIcon";
-import { Button } from "@twilio-paste/core/button";
 
 import { AppState } from "../store/definitions";
 import { FilePreview } from "./FilePreview";
@@ -23,21 +21,14 @@ export const MessageBubble = ({
 }: {
   message: Message;
   isLast: boolean;
-  isLastOfUserGroup: boolean;
   focusable: boolean;
   updateFocus: (newFocus: number) => void;
 }) => {
-
-    if (!message.body?.trim() && message.type !== "media") {
-    return null;
-  }
-  
   const [read, setRead] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const { conversationsClient, participants, users, fileAttachmentConfig, conversation } = useSelector((state: AppState) => ({
+  const { conversationsClient, participants, fileAttachmentConfig, conversation } = useSelector((state: AppState) => ({
     conversationsClient: state.chat.conversationsClient,
     participants: state.chat.participants,
-    users: state.chat.users,
     fileAttachmentConfig: state.config.fileAttachment,
     conversation: state.chat.conversation
   }));
@@ -50,7 +41,7 @@ export const MessageBubble = ({
       const getOtherParticipants = participants.filter((p) => p.identity !== conversationsClient?.user.identity);
       setRead(
         Boolean(getOtherParticipants.length) &&
-          getOtherParticipants.every((p) => p.lastReadMessageIndex === message.index)
+        getOtherParticipants.every((p) => p.lastReadMessageIndex === message.index)
       );
     } else {
       setRead(false);
@@ -62,6 +53,11 @@ export const MessageBubble = ({
       messageRef.current?.focus();
     }
   }, [focusable]);
+
+  // ❗️החזר null רק אחרי הקריאות ל-Hooks
+  if (!message.body?.trim() && message.type !== "media") {
+    return null;
+  }
 
   const renderMedia = () => {
     if (fileAttachmentConfig?.enabled && message.attachedMedia) {
@@ -77,34 +73,35 @@ export const MessageBubble = ({
     return null;
   };
 
-const renderInteractiveOptions = () => {
-  const attributes = message.attributes as { buttons?: { label: string; value: string }[] };
-  const buttons = attributes.buttons;
+  const renderInteractiveOptions = () => {
+    const attributes = message.attributes as { buttons?: { label: string; value: string }[] };
+    const buttons = attributes?.buttons;
 
-  if (!Array.isArray(buttons)) return null;
+    if (!Array.isArray(buttons)) return null;
 
-  const handleClick = async (value: string) => {
-    try {
-      await conversation?.sendMessage(value);
-    } catch (err) {
-      console.error("Failed to send option:", err);
-    }
-  };
+    const handleClick = async (value: string) => {
+      try {
+        await conversation?.sendMessage(value);
+      } catch (err) {
+        console.error("Failed to send option:", err);
+      }
+    };
 
-  return (
-    <Box className={classes.messageArray}>
+    return (
+      <Box className={classes.messageArray}>
         {buttons.map((opt, i) => (
           <button
             key={i}
             className={classes.option}
             onClick={() => handleClick(opt.value)}
+            type="button" // ✅ הוספת type כדי למנוע warning
           >
             {opt.label}
           </button>
         ))}
-    </Box>
-  );
-};
+      </Box>
+    );
+  };
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "ArrowUp" || e.key === "ArrowDown") {
@@ -119,10 +116,8 @@ const renderInteractiveOptions = () => {
     if (!isMouseDown) updateFocus(message.index);
   };
 
-  const author = users?.find((u) => u.identity === message.author)?.friendlyName || message.author;
-
   return (
- <Box
+    <Box
       className={classes.outerContainer}
       tabIndex={focusable ? 0 : -1}
       onFocus={handleFocus}
@@ -133,22 +128,20 @@ const renderInteractiveOptions = () => {
       data-message-bubble
       data-testid="message-bubble"
     >
-       
       <Box className={belongsToCurrentUser ? classes.bubbleContainerUser : classes.bubbleContainer}>
         <Box className={belongsToCurrentUser ? classes.innerContainerUser : classes.innerContainer}>
           {message.body && (
-            <p className={ belongsToCurrentUser ? classes.bodyUser : classes.body }>
+            <p className={belongsToCurrentUser ? classes.bodyUser : classes.body}>
               {parseMessageBody(message.body, belongsToCurrentUser)}
             </p>
           )}
-
           {message.type === "media" && renderMedia()}
         </Box>
-          <p className={classes.timeStamp} >
-              {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
-            </p>
+        <p className={classes.timeStamp}>
+          {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
+        </p>
       </Box>
-          {renderInteractiveOptions()}
+      {renderInteractiveOptions()}
       {read && (
         <Flex hAlignContent="right" vAlignContent="center" marginTop="space20">
           <Text as="p" className={classes.readStatus}>
@@ -157,7 +150,6 @@ const renderInteractiveOptions = () => {
           <SuccessIcon decorative={true} size="sizeIcon10" color="colorTextWeak" />
         </Flex>
       )}
-     
     </Box>
   );
 };
