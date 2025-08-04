@@ -46,17 +46,12 @@ const handleStartNewChat = async () => {
 
     let TranscriptComponent: typeof Transcript | undefined = undefined;
 
-    // This file and its related dependencies are only bundled if transcripts are enabled in .env file
     if (process.env.DOWNLOAD_TRANSCRIPT_ENABLED === "true" || process.env.EMAIL_TRANSCRIPT_ENABLED === "true") {
-        // eslint-disable-next-line @typescript-eslint/no-require-imports,@typescript-eslint/no-var-requires,global-require
         ({ Transcript: TranscriptComponent } = require("./Transcript"));
     }
 
     return (
         <Box className={classes.container}>
-            <Text as="h2" className={classes.title}>
-                Thanks for chatting with us!
-            </Text>
             {TranscriptComponent ? (
                 <TranscriptComponent
                     messages={messages}
@@ -67,11 +62,8 @@ const handleStartNewChat = async () => {
             ) : (
                 <Fragment />
             )}
-            <Text as="p" className={classes.text}>
-                If you have any more questions, feel free to reach out again.
-            </Text>
             <Button variant="primary" data-test="start-new-chat-button" onClick={handleStartNewChat}>
-                Start new chat
+            התחל צ'אט חדש
             </Button>
         </Box>
     );

@@ -3,8 +3,6 @@ import { ChangeEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from
 import throttle from "lodash.throttle";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@twilio-paste/core/box";
-import { Button } from "@twilio-paste/core/button";
-import { SendIcon } from "@twilio-paste/icons/esm/SendIcon";
 
 import { AppState } from "../store/definitions";
 import { AttachFileButton } from "./AttachFileButton";
@@ -12,6 +10,8 @@ import { FilePreview } from "./FilePreview";
 import { detachFiles } from "../store/actions/genericActions";
 import { CHAR_LIMIT } from "../constants";
 import classes from "./styles/MessageInput.module.scss";
+import { ReactComponent as SendIcon } from "./icons/send_icon.svg";
+import { SvgWrapper } from "./SvgWrapper";
 
 export const MessageInput = () => {
   const dispatch = useDispatch();
@@ -94,7 +94,7 @@ export const MessageInput = () => {
         <Box className={classes.textAreaContainer}>
           <textarea
             ref={textAreaRef}
-            className={classes.textArea} // <-- Your SCSS styling here
+            className={classes.textArea} 
             placeholder="Type your message"
             value={text}
             onChange={onChange}
@@ -106,17 +106,9 @@ export const MessageInput = () => {
         </Box>
         <Box className={classes.messageOptionContainer}>
           {fileAttachmentConfig?.enabled && <AttachFileButton textAreaRef={textAreaRef} />}
-        </Box>
-        <Box className={classes.messageOptionContainer}>
-          <Button
-            data-test="message-send-button"
-            variant="primary_icon"
-            size="icon_small"
-            type="submit"
-            aria-disabled={isSubmitDisabled}
-          >
-            <SendIcon decorative={false} title="Send message" size="sizeIcon30" />
-          </Button>
+          <SvgWrapper size={20} onClick={send} data-test="message-send-button" className={classes.sendButton} >
+            <SendIcon />
+          </SvgWrapper>
         </Box>
       </Box>
 

@@ -94,7 +94,7 @@ export const MessageBubble = ({
             key={i}
             className={classes.option}
             onClick={() => handleClick(opt.value)}
-            type="button" // ✅ הוספת type כדי למנוע warning
+            type="button" 
           >
             {opt.label}
           </button>
