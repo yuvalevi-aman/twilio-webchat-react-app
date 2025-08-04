@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button } from "@twilio-paste/core/button";
 import { AttachIcon } from "@twilio-paste/icons/esm/AttachIcon";
 
 import { AppState } from "../store/definitions";
-import classes from "./styles/AttachFileButton.module.scss";
 import { validateFiles } from "../utils/validateFiles";
 import { attachFiles } from "../store/actions/genericActions";
 

@@ -86,12 +86,12 @@ describe("Session Reducer", () => {
             SessionReducer(initialState, {
                 type: ACTION_CHANGE_ENGAGEMENT_PHASE,
                 payload: {
-                    currentPhase: EngagementPhase.PreEngagementForm
+                    currentPhase: EngagementPhase.MessagingCanvas
                 }
             })
         ).toEqual({
             ...initialState,
-            currentPhase: EngagementPhase.PreEngagementForm
+            currentPhase: EngagementPhase.MessagingCanvas
         });
     });
 });

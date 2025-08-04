@@ -36,7 +36,7 @@ export function WebchatWidget() {
                 dispatch(initSession({ token, conversationSid }));
             } catch (err) {
                 console.error("Auto-start failed:", err);
-                dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
+                dispatch(changeEngagementPhase({ phase: EngagementPhase.Loading }));
             }
         };
 
@@ -45,12 +45,10 @@ export function WebchatWidget() {
             try {
                 dispatch(initSession({ token: data.token, conversationSid: data.conversationSid }));
             } catch (e) {
-                dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
+                dispatch(changeEngagementPhase({ phase: EngagementPhase.Loading }));
             }
-        } else if (!config?.showPreEngagementForm) {
-            startChatAutomatically();
         } else {
-            dispatch(changeEngagementPhase({ phase: EngagementPhase.PreEngagementForm }));
+            startChatAutomatically();
         }
     }, [dispatch, config]);
 

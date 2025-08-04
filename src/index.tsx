@@ -12,7 +12,6 @@ import { initLogger } from "./logger";
 
 const defaultConfig: ConfigState = {
   serverUrl: "http://localhost:3001",
-  showPreEngagementForm: false,
   theme: {
     isLight: true,
   },
@@ -57,32 +56,30 @@ const initWebchat = async (config: ConfigState) => {
     window.store = store;
   }
 
-  if (!mergedConfig.showPreEngagementForm) {
-    try {
-      const response = await fetch(`${mergedConfig.serverUrl}/initWebchat`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          formData: {
-          friendlyName: "Customer",
-          query: "Hello" 
-        }
-        }),
-      });
-
-      const data = await response.json();
-      const { token, conversationSid } = data;
-
-      if (token && conversationSid) {
-        await store.dispatch<any>(initSession({ token, conversationSid }));
-      } else {
-        console.error("Missing token or conversationSid from /initWebchat");
+  try {
+    const response = await fetch(`${mergedConfig.serverUrl}/initWebchat`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        formData: {
+        friendlyName: "Customer",
+        query: "Hello" 
       }
-    } catch (error) {
-      console.error("Failed to initialize session without pre-engagement form", error);
+      }),
+    });
+
+    const data = await response.json();
+    const { token, conversationSid } = data;
+
+    if (token && conversationSid) {
+      await store.dispatch<any>(initSession({ token, conversationSid }));
+    } else {
+      console.error("Missing token or conversationSid from /initWebchat");
     }
+  } catch (error) {
+    console.error("Failed to initialize session", error);
   }
 };
 

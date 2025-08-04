@@ -171,14 +171,14 @@ describe("Conversation Ended", () => {
         expect(clearSessionDataSpy).toHaveBeenCalled();
     });
 
-    it("changes engagement phase to engagement form on new chat button click", () => {
+    it("changes engagement phase to loading phase on new chat button click", () => {
         const changeEngagementPhaseSpy = jest.spyOn(genericActions, "changeEngagementPhase");
 
         const { queryByText } = render(<ConversationEnded />);
         const newChatButton = queryByText(newChatButtonText) as Element;
         fireEvent.click(newChatButton);
 
-        expect(changeEngagementPhaseSpy).toHaveBeenCalledWith({ phase: EngagementPhase.PreEngagementForm });
+        expect(changeEngagementPhaseSpy).toHaveBeenCalledWith({ phase: EngagementPhase.Loading });
     });
 
     it("resets pre-engagement data on new chat button click", () => {

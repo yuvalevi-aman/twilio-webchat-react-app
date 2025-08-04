@@ -5,7 +5,6 @@ import { AlertVariants } from "@twilio-paste/core/alert";
 import { FileAttachmentConfig, TranscriptConfig } from "../definitions";
 
 export enum EngagementPhase {
-    PreEngagementForm = "PreEngagementForm",
     MessagingCanvas = "MessagingCanvas",
     Loading = "Loading"
 }
@@ -38,7 +37,6 @@ export type SessionState = {
 
 export type ConfigState = {
     serverUrl?: string;
-    showPreEngagementForm?: boolean;
     theme?: {
         isLight?: boolean;
         overrides?: Partial<GenericThemeShape>;

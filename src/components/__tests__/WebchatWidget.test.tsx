@@ -60,16 +60,7 @@ describe("Webchat Lite", () => {
         expect(initSessionSpy).toHaveBeenCalledWith(sessionData);
     });
 
-    it("start pre-engagement form if no pre-existing session data", () => {
-        (sessionDataHandler.tryResumeExistingSession as jest.Mock).mockReturnValueOnce(null);
-        const changeEngagementPhaseSpy = jest.spyOn(genericActions, "changeEngagementPhase");
-
-        render(<WebchatWidget />);
-
-        expect(changeEngagementPhaseSpy).toHaveBeenCalledWith({ phase: EngagementPhase.PreEngagementForm });
-    });
-
-    it("start pre-engagement form if session initialization failed", () => {
+    it("start loading phase if session initialization failed", () => {
         (initActions.initSession as jest.Mock).mockImplementationOnce(() => {
             throw new Error("Failed Initialization");
         });
@@ -77,6 +68,6 @@ describe("Webchat Lite", () => {
 
         render(<WebchatWidget />);
 
-        expect(changeEngagementPhaseSpy).toHaveBeenCalledWith({ phase: EngagementPhase.PreEngagementForm });
+        expect(changeEngagementPhaseSpy).toHaveBeenCalledWith({ phase: EngagementPhase.Loading });
     });
 });

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppState, EngagementPhase } from "../store/definitions";
 import { initSession } from "../store/actions/initActions";
 import { MessagingCanvasPhase } from "./MessagingCanvasPhase";
-import { PreEngagementFormPhase } from "./PreEngagementFormPhase";
 import { LoadingPhase } from "./LoadingPhase";
 import { EntryPoint } from "./EntryPoint";
 
@@ -17,28 +16,24 @@ const getPhaseComponent = (phase: EngagementPhase) => {
     case EngagementPhase.Loading:
       return <LoadingPhase />;
     case EngagementPhase.MessagingCanvas:
-      return <MessagingCanvasPhase />;
-    case EngagementPhase.PreEngagementForm:
     default:
-      return <PreEngagementFormPhase />;
+      return <MessagingCanvasPhase />;
   }
 };
 
 export function RootContainer() {
   const dispatch = useDispatch();
   const { currentPhase, expanded, token, conversationSid } = useSelector((state: AppState) => state.session);
-  const { showPreEngagementForm } = useSelector((state: AppState) => state.config);
 
   useEffect(() => {
     if (
-      !showPreEngagementForm &&
       token &&
       conversationSid &&
-      currentPhase === EngagementPhase.PreEngagementForm
+      currentPhase === EngagementPhase.Loading
     ) {
       dispatch(initSession({ token, conversationSid }));
     }
-  }, [showPreEngagementForm, token, conversationSid, currentPhase, dispatch]);
+  }, [token, conversationSid, currentPhase, dispatch]);
 
   return (
     <Box>

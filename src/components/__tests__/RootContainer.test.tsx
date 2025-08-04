@@ -6,7 +6,8 @@ import { EngagementPhase } from "../../store/definitions";
 import { RootContainer } from "../RootContainer";
 
 jest.mock("react-redux", () => ({
-    useSelector: jest.fn()
+    useSelector: jest.fn(),
+    useDispatch: () => jest.fn()
 }));
 
 jest.mock("../EntryPoint", () => ({
@@ -21,9 +22,7 @@ jest.mock("../MessagingCanvasPhase", () => ({
     MessagingCanvasPhase: () => <div title="MessagingCanvasPhase" />
 }));
 
-jest.mock("../PreEngagementFormPhase", () => ({
-    PreEngagementFormPhase: () => <div title="PreEngagementFormPhase" />
-}));
+
 
 describe("Root Container", () => {
     beforeEach(() => {
@@ -64,24 +63,14 @@ describe("Root Container", () => {
         expect(queryByTitle("MessagingCanvasPhase")).toBeInTheDocument();
     });
 
-    it("renders pre-engagement form phase when supplied as phase", () => {
-        (useSelector as jest.Mock).mockImplementation((callback: any) =>
-            callback({ session: { expanded: true, currentPhase: EngagementPhase.PreEngagementForm } })
-        );
-
-        const { queryByTitle } = render(<RootContainer />);
-
-        expect(queryByTitle("PreEngagementFormPhase")).toBeInTheDocument();
-    });
-
-    it("renders the re-engagement form phase as default phase", () => {
+    it("renders messaging canvas phase as default phase", () => {
         (useSelector as jest.Mock).mockImplementation((callback: any) =>
             callback({ session: { expanded: true, currentPhase: null } })
         );
 
         const { queryByTitle } = render(<RootContainer />);
 
-        expect(queryByTitle("PreEngagementFormPhase")).toBeInTheDocument();
+        expect(queryByTitle("MessagingCanvasPhase")).toBeInTheDocument();
     });
 
     it("does not render phase when not expanded", () => {
