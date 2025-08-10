@@ -23,7 +23,7 @@ export const AttachFileButton = ({ textAreaRef }: { textAreaRef?: React.RefObjec
       dispatch(attachFiles(validFiles));
     }
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // reset
+      fileInputRef.current.value = ""; 
     }
     textAreaRef?.current?.focus();
   };
@@ -42,7 +42,6 @@ export const AttachFileButton = ({ textAreaRef }: { textAreaRef?: React.RefObjec
         variant="secondary_icon"
         size="icon_small"
         onClick={() => {
-          console.log("Click triggered");
           fileInputRef.current?.click();
         }}
       >

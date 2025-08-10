@@ -1,82 +1,58 @@
-import { ReactElement } from "react";
-
+// src/utils/parseMessageBody.test.tsx
 import { parseMessageBody } from "./parseMessageBody";
 
-describe("parseMessageBody", () => {
-    it("parses body without links correctly", () => {
-        const messageBody = "hello everyone this is some text";
+describe("parseMessageBody (string-only)", () => {
+  it("returns body without links as-is", () => {
+    const messageBody = "hello everyone this is some text";
+    expect(parseMessageBody(messageBody)).toBe(messageBody);
+  });
 
-        expect(parseMessageBody(messageBody, false)).toStrictEqual([messageBody]);
-    });
+  it("returns multiline body as-is (with newlines)", () => {
+    const line1 = "hello everyone,";
+    const line2 = "this is a multiline";
+    const line3 = "message.";
+    const messageBody = `${line1}\n${line2}\n${line3}`;
 
-    it("parses multiline body without links correctly", () => {
-        const line1 = "hello everyone,";
-        const line2 = "this is a multiline";
-        const line3 = "message.";
-        const messageBody = `${line1}\n${line2}\n${line3}`;
+    expect(parseMessageBody(messageBody)).toBe(messageBody);
+  });
 
-        expect(parseMessageBody(messageBody, false)).toStrictEqual([line1, "\n", line2, "\n", line3]);
-    });
+  it("does not convert link: leaves it as plain text", () => {
+    const beforeBody = "check out this link ";
+    const link = "https://www.google.com";
+    const afterBody = " alright";
+    const messageBody = `${beforeBody}${link}${afterBody}`;
 
-    it("parses body with link correctly", () => {
-        const beforeBody = "check out this link ";
-        const link = "https://www.google.com";
-        const afterBody = " alright";
-        const messageBody = `${beforeBody}${link}${afterBody}`;
-        const renderedResult = parseMessageBody(messageBody, false);
-        const renderedLink = renderedResult[1] as ReactElement;
+    const rendered = parseMessageBody(messageBody);
+    expect(rendered).toBe(messageBody);
+  });
 
-        expect(renderedResult).toEqual([beforeBody, expect.anything(), afterBody]);
-        expect(renderedLink.props).toMatchObject({ href: link, children: link });
-    });
+  it("does not add protocol for www.* here (handled elsewhere)", () => {
+    const link = "www.google.com";
+    expect(parseMessageBody(link)).toBe(link);
+  });
 
-    it("adds missing protocol to link of message body", () => {
-        const link = "www.google.com";
-        const renderedResult = parseMessageBody(link, false);
-        const renderedLink = renderedResult[1] as ReactElement;
+  it("invalid TLD stays plain text", () => {
+    const messageBody = "hello www.google.invalidtopleveldomain";
+    expect(parseMessageBody(messageBody)).toBe(messageBody);
+  });
 
-        expect(renderedLink.props).toMatchObject({ href: `http://${link}`, children: link });
-    });
+  it("http without dot domain stays as-is", () => {
+    const link = "http://anyrandomstring";
+    expect(parseMessageBody(link)).toBe(link);
+  });
 
-    it("does not create link from invalid url in message body", () => {
-        const messageBody = "hello www.google.invalidtopleveldomain";
-        const renderedResult = parseMessageBody(messageBody, false);
-        const renderedLink = renderedResult[1] as ReactElement;
+  it("complex url stays as-is", () => {
+    const link = "http://www.google.com/root-path/page1#hashlink%20hello?arg1=123&arg2=321";
+    expect(parseMessageBody(link)).toBe(link);
+  });
 
-        expect(renderedResult).toEqual([messageBody]);
-        expect(renderedLink).toBeUndefined();
-    });
+  it("underscored domain stays as plain text", () => {
+    const messageBody = "www.go_ogle.com";
+    expect(parseMessageBody(messageBody)).toBe(messageBody);
+  });
 
-    it("parses link that is any word following protocol", () => {
-        const link = "http://anyrandomstring";
-        const renderedResult = parseMessageBody(link, false);
-        const renderedLink = renderedResult[1] as ReactElement;
-
-        expect(renderedLink.props).toMatchObject({ href: link, children: link });
-    });
-
-    it("parses link with path", () => {
-        const link = "http://www.google.com/root-path/page1#hashlink%20hello?arg1=123&arg2=321";
-        const renderedResult = parseMessageBody(link, false);
-        const renderedLink = renderedResult[1] as ReactElement;
-
-        expect(renderedLink.props).toMatchObject({ href: link, children: link });
-    });
-
-    it("parses link with port and subdomains", () => {
-        const link = "http://sub1.sub2.sub3.sub-4.google.com:8000/path-to-somewhere";
-        const renderedResult = parseMessageBody(link, false);
-        const renderedLink = renderedResult[1] as ReactElement;
-
-        expect(renderedLink.props).toMatchObject({ href: link, children: link });
-    });
-
-    it("does not create a link with underscores in domain", () => {
-        const messageBody = "www.go_ogle.com";
-        const renderedResult = parseMessageBody(messageBody, false);
-        const renderedLink = renderedResult[1] as ReactElement;
-
-        expect(renderedResult).toEqual([messageBody]);
-        expect(renderedLink).toBeUndefined();
-    });
+  it("strips zero-width characters/BOM", () => {
+    const dirty = "hello\u200Bworld\uFEFF";
+    expect(parseMessageBody(dirty)).toBe("helloworld");
+  });
 });

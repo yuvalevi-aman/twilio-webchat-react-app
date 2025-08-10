@@ -3,8 +3,12 @@ import { Box } from "@twilio-paste/core/box";
 import { useSelector } from "react-redux";
 import { Text } from "@twilio-paste/core/text";
 import { Flex } from "@twilio-paste/core/flex";
+import { Anchor } from "@twilio-paste/core/anchor";
 import { Key, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { SuccessIcon } from "@twilio-paste/icons/esm/SuccessIcon";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 import { AppState } from "../store/definitions";
 import { FilePreview } from "./FilePreview";
@@ -17,7 +21,7 @@ export const MessageBubble = ({
   message,
   isLast,
   focusable,
-  updateFocus
+  updateFocus,
 }: {
   message: Message;
   isLast: boolean;
@@ -26,22 +30,27 @@ export const MessageBubble = ({
 }) => {
   const [read, setRead] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
-  const { conversationsClient, participants, fileAttachmentConfig, conversation } = useSelector((state: AppState) => ({
-    conversationsClient: state.chat.conversationsClient,
-    participants: state.chat.participants,
-    fileAttachmentConfig: state.config.fileAttachment,
-    conversation: state.chat.conversation
-  }));
-  const messageRef = useRef<HTMLDivElement>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
+  const { conversationsClient, participants, fileAttachmentConfig, conversation } =
+    useSelector((state: AppState) => ({
+      conversationsClient: state.chat.conversationsClient,
+      participants: state.chat.participants,
+      fileAttachmentConfig: state.config.fileAttachment,
+      conversation: state.chat.conversation,
+    }));
+
+  const messageRef = useRef<HTMLDivElement>(null);
   const belongsToCurrentUser = message.author === conversationsClient?.user.identity;
 
   useEffect(() => {
     if (isLast && participants && belongsToCurrentUser) {
-      const getOtherParticipants = participants.filter((p) => p.identity !== conversationsClient?.user.identity);
+      const getOtherParticipants = participants.filter(
+        (p) => p.identity !== conversationsClient?.user.identity
+      );
       setRead(
         Boolean(getOtherParticipants.length) &&
-        getOtherParticipants.every((p) => p.lastReadMessageIndex === message.index)
+          getOtherParticipants.every((p) => p.lastReadMessageIndex === message.index)
       );
     } else {
       setRead(false);
@@ -54,7 +63,6 @@ export const MessageBubble = ({
     }
   }, [focusable]);
 
-  // ❗️החזר null רק אחרי הקריאות ל-Hooks
   if (!message.body?.trim() && message.type !== "media") {
     return null;
   }
@@ -65,22 +73,33 @@ export const MessageBubble = ({
         const file = {
           name: media.filename,
           type: media.contentType,
-          size: media.size
+          size: media.size,
         } as File;
-        return <FilePreview key={index} file={file} isBubble={true} media={media} focusable={focusable} />;
+        return (
+          <FilePreview
+            key={index}
+            file={file}
+            isBubble={true}
+            media={media}
+            focusable={focusable}
+          />
+        );
       });
     }
     return null;
   };
 
   const renderInteractiveOptions = () => {
-    const attributes = message.attributes as { buttons?: { label: string; value: string }[] };
+    const attributes = message.attributes as {
+      buttons?: { label: string; value: string }[];
+    };
     const buttons = attributes?.buttons;
-
     if (!Array.isArray(buttons)) return null;
 
     const handleClick = async (value: string) => {
+      if (selectedOption) return;
       try {
+        setSelectedOption(value);
         await conversation?.sendMessage(value);
       } catch (err) {
         console.error("Failed to send option:", err);
@@ -89,16 +108,20 @@ export const MessageBubble = ({
 
     return (
       <Box className={classes.messageArray}>
-        {buttons.map((opt, i) => (
-          <button
-            key={i}
-            className={classes.option}
-            onClick={() => handleClick(opt.value)}
-            type="button" 
-          >
-            {opt.label}
-          </button>
-        ))}
+        {buttons.map((opt, i) => {
+          const isDisabled = Boolean(selectedOption);
+          return (
+            <button
+              key={i}
+              className={`${classes.option} ${isDisabled ? classes.disabledOption : ""}`}
+              onClick={() => handleClick(opt.value)}
+              disabled={isDisabled}
+              type="button"
+            >
+              {opt.label}
+            </button>
+          );
+        })}
       </Box>
     );
   };
@@ -116,6 +139,8 @@ export const MessageBubble = ({
     if (!isMouseDown) updateFocus(message.index);
   };
 
+  const mdText = parseMessageBody(message.body ?? "", belongsToCurrentUser);
+
   return (
     <Box
       className={classes.outerContainer}
@@ -128,20 +153,41 @@ export const MessageBubble = ({
       data-message-bubble
       data-testid="message-bubble"
     >
-      <Box className={belongsToCurrentUser ? classes.bubbleContainerUser : classes.bubbleContainer}>
+      <Box
+        className={belongsToCurrentUser ? classes.bubbleContainerUser : classes.bubbleContainer}
+      >
         <Box className={belongsToCurrentUser ? classes.innerContainerUser : classes.innerContainer}>
           {message.body && (
-            <p className={belongsToCurrentUser ? classes.bodyUser : classes.body}>
-              {parseMessageBody(message.body, belongsToCurrentUser)}
-            </p>
+            <ReactMarkdown
+              className={belongsToCurrentUser ? classes.bodyUser : classes.body}
+              remarkPlugins={[remarkGfm, remarkBreaks]}
+              components={{
+                a: ({ href, children }) => (
+                  <Anchor
+                    href={href ?? "#"}
+                    variant={belongsToCurrentUser ? "inverse" : "default"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {children}
+                  </Anchor>
+                ),
+              }}
+              children={mdText}
+            />
           )}
           {message.type === "media" && renderMedia()}
         </Box>
+
         <p className={classes.timeStamp}>
-          {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(message.dateCreated.getMinutes())}`}
+          {`${doubleDigit(message.dateCreated.getHours())}:${doubleDigit(
+            message.dateCreated.getMinutes()
+          )}`}
         </p>
       </Box>
+
       {renderInteractiveOptions()}
+
       {read && (
         <Flex hAlignContent="right" vAlignContent="center" marginTop="space20">
           <Text as="p" className={classes.readStatus}>

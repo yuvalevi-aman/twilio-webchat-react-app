@@ -156,7 +156,6 @@ export const MessageList = () => {
     };
 
     const handleFocus = () => {
-        // Hand over focus to message bubbles once there is at least one
         if (messages && messages.length && focusIndex < 0) {
             setFocusIndex(messages[messages.length - 1].index);
         }
